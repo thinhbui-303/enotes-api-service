@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.CategoryResponse;
+import com.thinhbqt.enotes_api_service.entity.Category;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-
 
 
 
