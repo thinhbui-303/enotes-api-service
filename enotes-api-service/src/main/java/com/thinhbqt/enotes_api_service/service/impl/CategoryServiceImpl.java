@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.thinhbqt.enotes_api_service.config.ProjectConfig;
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.CategoryResponse;
 import com.thinhbqt.enotes_api_service.entity.Category;
@@ -37,9 +36,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryResponse> getAllCategory(){
+    public List<CategoryDto> getAllCategory(){
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
-        .map(cate -> mapper.map(cate,CategoryResponse.class)).toList();
+        .map(cate -> mapper.map(cate,CategoryDto.class)).toList();
+    }
+    @Override
+    public List<CategoryResponse> getAllIsActiveCategory(){
+        List<Category> categories = categoryRepository.findByIsActiveTrue();
+        return categories.stream().map(cate -> mapper.map(cate, CategoryResponse.class)).toList();
     }
 }

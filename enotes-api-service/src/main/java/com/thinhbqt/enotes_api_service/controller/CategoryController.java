@@ -38,7 +38,7 @@ public class CategoryController {
     }
     @GetMapping("/categories")
     public ResponseEntity<?> getAllCategory() {
-        List<CategoryResponse> categories = categoryService.getAllCategory();
+        List<CategoryDto> categories = categoryService.getAllCategory();
         if(CollectionUtils.isEmpty(categories)){
             return ResponseEntity.noContent().build();
         }
@@ -46,6 +46,17 @@ public class CategoryController {
             return new ResponseEntity<>(categories, HttpStatus.OK);
         }
     }
+    @GetMapping("/active-categories")
+    public ResponseEntity<?> getIsActiveCategory() {
+        List<CategoryResponse> categories = categoryService.getAllIsActiveCategory();
+        if(CollectionUtils.isEmpty(categories)){
+            return ResponseEntity.noContent().build();
+        }
+        else{
+            return new ResponseEntity<>(categories, HttpStatus.OK);
+        }
+    }
+    
     
     
 }
