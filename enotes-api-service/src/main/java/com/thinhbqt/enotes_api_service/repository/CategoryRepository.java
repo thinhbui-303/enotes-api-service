@@ -2,6 +2,7 @@ package com.thinhbqt.enotes_api_service.repository;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -12,5 +13,5 @@ public interface CategoryRepository extends JpaRepository<Category, Integer>{
 
     List<Category> findByIsDeletedFalse();
 
-    Category findByIdAndIsDeletedFalse(Integer id);
+    Optional<Category> findByIdAndIsDeletedFalse(Integer id);
 }

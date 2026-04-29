@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.CategoryResponse;
-import com.thinhbqt.enotes_api_service.entity.Category;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,17 +60,33 @@ public class CategoryController {
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
+    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) throws Exception{
+        // try {
+        //     CategoryDto categoryDto = categoryService.getById(id);
+        // if(ObjectUtils.isEmpty(categoryDto)){
+        //     return new ResponseEntity<>("not found category", HttpStatus.NOT_FOUND);
+        // }
+        // else{
+        //     return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+        // }
+        // }
+        // catch (ResourceNotFoundException e) {
+        //     return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        // }
+        // catch (Exception e) {
+        //     return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        // }
+
         CategoryDto categoryDto = categoryService.getById(id);
         if(ObjectUtils.isEmpty(categoryDto)){
             return new ResponseEntity<>("not found category", HttpStatus.NOT_FOUND);
         }
-        else{
+        else
             return new ResponseEntity<>(categoryDto, HttpStatus.OK);
-        }
+        
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCategory(@PathVariable Integer id){
+    public ResponseEntity<?> deleteCategory(@PathVariable Integer id) throws Exception{
         Boolean deletedCategory = categoryService.deleteById(id);
         if(deletedCategory){
             return new ResponseEntity<>("deleted successfully", HttpStatus.OK);
@@ -79,6 +94,8 @@ public class CategoryController {
         else{
             return new ResponseEntity<>("not found category", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+
     }
     
     
