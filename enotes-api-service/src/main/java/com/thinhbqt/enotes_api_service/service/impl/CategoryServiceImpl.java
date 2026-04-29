@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getById(Integer id) throws Exception{
+    public CategoryDto getById(Integer id){
         Category category = categoryRepository.findByIdAndIsDeletedFalse(id)
         .orElseThrow( () -> new ResourceNotFoundException("Category not found with id: " + id));
         if (ObjectUtils.isEmpty(category)) {

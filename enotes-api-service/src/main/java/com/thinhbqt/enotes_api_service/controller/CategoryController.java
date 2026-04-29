@@ -60,7 +60,7 @@ public class CategoryController {
         }
     }
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) throws Exception{
+    public ResponseEntity<?> getCategoryById(@PathVariable Integer id){
         // try {
         //     CategoryDto categoryDto = categoryService.getById(id);
         // if(ObjectUtils.isEmpty(categoryDto)){
