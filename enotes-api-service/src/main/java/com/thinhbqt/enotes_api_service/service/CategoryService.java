@@ -17,4 +17,5 @@ public interface CategoryService {
     public CategoryDto getById(Integer id) ;
 
     public Boolean deleteById(Integer id);
+
 }

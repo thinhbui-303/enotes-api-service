@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.CategoryResponse;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,7 +33,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/save-category")
-    public ResponseEntity<?> saveCategory(@RequestBody CategoryDto category) {
+    public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category) {
         Boolean isSaved = categoryService.saveCategory(category);
         if(isSaved){
             return new ResponseEntity<>("susscess save", HttpStatus.CREATED);

@@ -15,6 +15,7 @@ import com.thinhbqt.enotes_api_service.entity.Category;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.repository.CategoryRepository;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
+import com.thinhbqt.enotes_api_service.util.Validation;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -23,10 +24,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private Validation validation;
     @Override
     public Boolean saveCategory(CategoryDto categoryDto) {
+        validation.categoryValidation(categoryDto);
+
         Category category = mapper.map(categoryDto, Category.class);
 
+        
         if (ObjectUtils.isEmpty(category.getId())) {
 
             category.setIsDeleted(false);
@@ -49,10 +55,11 @@ public class CategoryServiceImpl implements CategoryService {
             cate.setCreatedOn(category.getCreatedOn());
             cate.setUpdatedBy(1);
             cate.setUpdatedOn(new Date());
-
         }
         
     }
+ 
+
 
     @Override
     public List<CategoryDto> getAllCategory() {
@@ -80,7 +87,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Boolean deleteById(Integer id) {
-        Category category = categoryRepository.findById(id).get();
+        Category category = categoryRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Category not found with id:"+ id));
 
         if (ObjectUtils.isEmpty(category)) {
             return false;
