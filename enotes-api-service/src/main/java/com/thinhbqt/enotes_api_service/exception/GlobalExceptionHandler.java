@@ -48,5 +48,10 @@ public class GlobalExceptionHandler {
         log.error("GlobalExceptionHandler::handleValidationException ", exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+     @ExceptionHandler(ExistedDataException.class)
+    public ResponseEntity<?> handleExistedDataException(ExistedDataException e) {
+        log.error("GlobalExceptionHandler::handleExistedDataException ", e.getMessage());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
 
 }

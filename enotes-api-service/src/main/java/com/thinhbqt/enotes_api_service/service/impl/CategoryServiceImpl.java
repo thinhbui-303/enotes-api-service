@@ -12,6 +12,7 @@ import org.springframework.util.ObjectUtils;
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.CategoryResponse;
 import com.thinhbqt.enotes_api_service.entity.Category;
+import com.thinhbqt.enotes_api_service.exception.ExistedDataException;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.repository.CategoryRepository;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
@@ -31,8 +32,11 @@ public class CategoryServiceImpl implements CategoryService {
         validation.categoryValidation(categoryDto);
 
         Category category = mapper.map(categoryDto, Category.class);
-
+        Boolean existedName = categoryRepository.existsByName(categoryDto.getName()); 
         
+        if(existedName){
+            throw new ExistedDataException("Category name has already existed");
+        }
         if (ObjectUtils.isEmpty(category.getId())) {
 
             category.setIsDeleted(false);

@@ -19,11 +19,11 @@ public class CategoryDto {
     private Integer id;
 
     @NotBlank
-    @Size(min = 10, max = 100)
+    @Size(min = 3, max = 100)
     private String name;
 
     @NotBlank
-    @Size(min = 10, max = 100)
+    @Size(min = 10, max = 1000)
     private String description;
 
     @NotNull
