@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.CategoryResponse;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
+import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
 import jakarta.validation.Valid;
 
@@ -36,10 +37,12 @@ public class CategoryController {
     public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category) {
         Boolean isSaved = categoryService.saveCategory(category);
         if(isSaved){
-            return new ResponseEntity<>("susscess save", HttpStatus.CREATED);
+            // return new ResponseEntity<>("susscess save", HttpStatus.CREATED);
+            return CommonUtil.createBuildResponseMessage(category, HttpStatus.CREATED, "success save");
         }
         else{
-            return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+            // return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);
+            return CommonUtil.createErrorResponseMessage("failed to save category", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/categories")
@@ -49,7 +52,8 @@ public class CategoryController {
             return ResponseEntity.noContent().build();
         }
         else{
-            return new ResponseEntity<>(categories, HttpStatus.OK);
+            // return new ResponseEntity<>(categories, HttpStatus.OK);
+            return CommonUtil.createBuildResponse(categories, HttpStatus.OK);
         }
     }
     @GetMapping("/active-categories")
@@ -59,7 +63,9 @@ public class CategoryController {
             return ResponseEntity.noContent().build();
         }
         else{
-            return new ResponseEntity<>(categories, HttpStatus.OK);
+            // return new ResponseEntity<>(categories, HttpStatus.OK);
+            return CommonUtil.createBuildResponse(categories, HttpStatus.OK);
+
         }
     }
     @GetMapping("/{id}")
@@ -82,20 +88,21 @@ public class CategoryController {
 
         CategoryDto categoryDto = categoryService.getById(id);
         if(ObjectUtils.isEmpty(categoryDto)){
-            return new ResponseEntity<>("not found category", HttpStatus.NOT_FOUND);
+            return CommonUtil.createErrorResponseMessage("category not found ", HttpStatus.NOT_FOUND);
         }
         else
-            return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+            return CommonUtil.createBuildResponse(categoryDto, HttpStatus.OK);
         
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Integer id) throws Exception{
         Boolean deletedCategory = categoryService.deleteById(id);
         if(deletedCategory){
-            return new ResponseEntity<>("deleted successfully", HttpStatus.OK);
+            return CommonUtil.createBuildResponse(deletedCategory, HttpStatus.OK);
         }
         else{
-            return new ResponseEntity<>("not found category", HttpStatus.INTERNAL_SERVER_ERROR);
+            // return new ResponseEntity<>("not found category", HttpStatus.INTERNAL_SERVER_ERROR);
+            return CommonUtil.createErrorResponseMessage("not found category", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
 

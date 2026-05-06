@@ -1,6 +1,5 @@
 package com.thinhbqt.enotes_api_service.service.impl;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,8 +62,6 @@ public class CategoryServiceImpl implements CategoryService {
         
     }
  
-
-
     @Override
     public List<CategoryDto> getAllCategory() {
         List<Category> categories = categoryRepository.findByIsDeletedFalse();
