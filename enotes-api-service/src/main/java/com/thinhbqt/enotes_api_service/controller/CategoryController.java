@@ -38,7 +38,7 @@ public class CategoryController {
         Boolean isSaved = categoryService.saveCategory(category);
         if(isSaved){
             // return new ResponseEntity<>("susscess save", HttpStatus.CREATED);
-            return CommonUtil.createBuildResponseMessage(category, HttpStatus.CREATED, "success save");
+            return CommonUtil.createBuildResponseMessage( HttpStatus.CREATED, "success save");
         }
         else{
             // return new ResponseEntity<>("not saved", HttpStatus.INTERNAL_SERVER_ERROR);

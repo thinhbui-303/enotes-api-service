@@ -14,18 +14,18 @@ public class CommonUtil {
         .build();
         return response.create();
     }
-    public static ResponseEntity<?> createBuildResponseMessage(Object data , HttpStatus status, String message){
+    public static ResponseEntity<?> createBuildResponseMessage( HttpStatus status, String message){
         GenericResponse response = GenericResponse.builder()
         .responseStatus(status)
         .status("succcess")
         .message(message)
-        .data(data)
         .build();
         return response.create();
     }
-    public static ResponseEntity<?> createErrorResponse( HttpStatus status){
+    public static ResponseEntity<?> createErrorResponse(Object data, HttpStatus status){
         GenericResponse response = GenericResponse.builder()
         .responseStatus(status).status("failed")
+        .data(data)
         .build();
         return response.create();
     }
