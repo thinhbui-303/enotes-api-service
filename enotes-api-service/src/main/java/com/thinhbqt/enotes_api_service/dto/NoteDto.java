@@ -2,7 +2,6 @@ package com.thinhbqt.enotes_api_service.dto;
 
 import java.util.Date;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,10 +28,27 @@ public class NoteDto {
 
     private Date updatedOn;
 
+    private FileDetailsDto fileDetailsDto;
     @Getter
     @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class CategoryDto {
         private Integer id;
         private String name;
+    }
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FileDetailsDto {
+   
+    private Integer id; 
+
+    private String originalFileName;
+
+    private  String displayFileName;
+
+  
     }
 }
