@@ -1,8 +1,10 @@
 package com.thinhbqt.enotes_api_service.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -119,5 +122,18 @@ public class NoteServiceImpl implements NoteService{
         .map(note -> mapper.map(note, NoteDto.class))
         .toList();
     }
+ 
+    @Override
+    public FileDetails getFileDetails(Integer id){
+        return fileDetailsRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Not found id file"));
+    }
     
+    @Override
+    public byte[] downloadFile(FileDetails fileDetails)throws Exception{
+        InputStream inputStream = new FileInputStream(fileDetails.getPath());
+        byte[] data =  StreamUtils.copyToByteArray(inputStream);
+        inputStream.close();
+        return data;
+    } 
 }

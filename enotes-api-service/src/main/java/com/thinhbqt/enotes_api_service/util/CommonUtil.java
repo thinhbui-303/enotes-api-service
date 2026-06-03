@@ -1,5 +1,6 @@
 package com.thinhbqt.enotes_api_service.util;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -34,5 +35,27 @@ public class CommonUtil {
         .responseStatus(status).status("failed")
         .message(message).build();
         return response.create();
+    }
+
+    public static String setContentType(String fileName){
+        String extension = FilenameUtils.getExtension(fileName);
+        switch (extension.toLowerCase()) {
+            case "pdf":
+                return "application/pdf";
+            case "txt":
+                return "text/plain";
+            case "png":
+                return "image/png";
+            case "jpg":
+                return "iamge/jpg";
+            case "jpeg":
+                return "image/jpeg";
+            case "xlsx":
+                return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            
+        
+            default:
+                return "application/octet-stream";
+        }
     }
 }

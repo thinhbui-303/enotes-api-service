@@ -1,5 +1,6 @@
 package com.thinhbqt.enotes_api_service.exception;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,10 +55,17 @@ public class GlobalExceptionHandler {
         log.error("GlobalExceptionHandler::handleValidationException ", exception.getMessage());
         return CommonUtil.createErrorResponseMessage( exception.getMessage(),HttpStatus.BAD_REQUEST);
     }
-     @ExceptionHandler(ExistedDataException.class)
+
+    @ExceptionHandler(ExistedDataException.class)
     public ResponseEntity<?> handleExistedDataException(ExistedDataException e) {
         log.error("GlobalExceptionHandler::handleExistedDataException ", e.getMessage());
         return CommonUtil.createErrorResponseMessage( e.getMessage(),HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<?> handleFileNotFoundException(FileNotFoundException exception) {
+        log.error("GlobalExceptionHandler::handleFileNotFoundException ", exception.getMessage());
+        return CommonUtil.createErrorResponseMessage( exception.getMessage(),HttpStatus.NOT_FOUND);
     }
 
 }
