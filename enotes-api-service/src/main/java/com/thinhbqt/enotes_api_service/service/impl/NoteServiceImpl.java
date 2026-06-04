@@ -2,7 +2,6 @@ package com.thinhbqt.enotes_api_service.service.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,6 +13,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StreamUtils;
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinhbqt.enotes_api_service.dto.NoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto.CategoryDto;
+import com.thinhbqt.enotes_api_service.dto.NoteResponse;
 import com.thinhbqt.enotes_api_service.entity.FileDetails;
 import com.thinhbqt.enotes_api_service.entity.Note;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
@@ -136,4 +139,18 @@ public class NoteServiceImpl implements NoteService{
         inputStream.close();
         return data;
     } 
+   
+    @Override
+    public NoteResponse getAllNotePagination(Integer uid , Integer pageNo, Integer pageSize){
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<Note> notes = noteRepository.findByCreatedBy(uid, pageable);
+
+        List<NoteDto> noteDtos = notes.get().map(note -> mapper.map(note, NoteDto.class)).toList();
+        NoteResponse  noteResponse = NoteResponse.builder().pageNo(pageNo).pageSize(pageSize)
+                                    .notes(noteDtos)
+                                    .totalElements(notes.getTotalElements()).totalPages(notes.getTotalPages())
+                                    .isFirst(notes.isFirst()).isLast(notes.isLast()).build();
+        return noteResponse;
+        }
 }

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.thinhbqt.enotes_api_service.dto.NoteDto;
+import com.thinhbqt.enotes_api_service.dto.NoteResponse;
 import com.thinhbqt.enotes_api_service.entity.FileDetails;
 import com.thinhbqt.enotes_api_service.service.NoteService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
@@ -60,8 +61,14 @@ public class NoteController {
         header.setContentType(mediaType);
         header.setContentDispositionFormData("attachment", fileDetails.getOriginalFileName());
 
-        return new ResponseEntity<>(data,header,HttpStatus.OK);
+        return CommonUtil.createBuildResponse(data,HttpStatus.OK);
     }
-    
+   @GetMapping("/NotesPagination")
+   public ResponseEntity<?> getAllNotePagination(@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, 
+    @RequestParam(value = "pageSize", defaultValue = "10")Integer pageSize) {
+        NoteResponse noteResponse = noteService.getAllNotePagination(1, pageNo, pageSize);
+       return new ResponseEntity<>(noteResponse, HttpStatus.OK);
+   }
+   
     
 }
