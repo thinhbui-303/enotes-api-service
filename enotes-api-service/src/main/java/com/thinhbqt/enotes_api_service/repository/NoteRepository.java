@@ -10,4 +10,9 @@ import com.thinhbqt.enotes_api_service.entity.Note;
 @Repository
 public interface NoteRepository extends JpaRepository<Note, Integer>{
     Page<Note> findByCreatedBy(Integer uid , Pageable pageable);
+
+    Page<Note> findByCreatedByAndIsDeletedTrue(Integer uid, Pageable pageable);
+
+    Page<Note> findByCreatedByAndIsDeletedFalse(Integer uid, Pageable pageable);
+
 }

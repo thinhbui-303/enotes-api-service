@@ -18,4 +18,13 @@ public interface NoteService {
     public byte[] downloadFile(FileDetails fileDetails)throws Exception;
 
     public NoteResponse getAllNotePagination(Integer uid , Integer pageNo, Integer pageSize);
+
+    public void softDeleteNote(Integer id);
+
+    public void restoreNote(Integer id);
+
+    public NoteResponse getNoteFromBinPagination(Integer uid , Integer pageNo, Integer pageSize);
+
+
+
 }

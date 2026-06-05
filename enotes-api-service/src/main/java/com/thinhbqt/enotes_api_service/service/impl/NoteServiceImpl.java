@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,6 +60,9 @@ public class NoteServiceImpl implements NoteService{
 
         ObjectMapper ob = new ObjectMapper();
         NoteDto noteDto = ob.readValue(notes, NoteDto.class);
+
+        noteDto.setIsDeleted(false);
+        noteDto.setDeletedOn(null);
 
         FileDetails fileDetails = saveFileDetails(file);
 
@@ -158,7 +162,7 @@ public class NoteServiceImpl implements NoteService{
     public NoteResponse getAllNotePagination(Integer uid , Integer pageNo, Integer pageSize){
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        Page<Note> notes = noteRepository.findByCreatedBy(uid, pageable);
+        Page<Note> notes = noteRepository.findByCreatedByAndIsDeletedFalse(uid, pageable);
 
         List<NoteDto> noteDtos = notes.get().map(note -> mapper.map(note, NoteDto.class)).toList();
         NoteResponse  noteResponse = NoteResponse.builder().pageNo(pageNo).pageSize(pageSize)
@@ -166,5 +170,38 @@ public class NoteServiceImpl implements NoteService{
                                     .totalElements(notes.getTotalElements()).totalPages(notes.getTotalPages())
                                     .isFirst(notes.isFirst()).isLast(notes.isLast()).build();
         return noteResponse;
+        }
+
+    @Override
+    public void softDeleteNote(Integer id){
+        Note note  =  noteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found id note!"));
+        note.setIsDeleted(true);
+        note.setDeletedOn(new Date());
+        noteRepository.save(note);
+    }
+
+    @Override
+    public void restoreNote(Integer id){
+        Note note  =  noteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found id note!"));
+        note.setIsDeleted(false);
+        note.setDeletedOn(null);
+        noteRepository.save(note);
+    }
+    @Override
+    public NoteResponse getNoteFromBinPagination(Integer uid , Integer pageNo, Integer pageSize){
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<Note> notes = noteRepository.findByCreatedByAndIsDeletedTrue(uid, pageable); 
+
+        List<NoteDto> noteDto = notes.get().map(note -> mapper.map(note, NoteDto.class)).toList();
+
+        NoteResponse noteResponse = NoteResponse.builder().notes(noteDto)
+                                    .totalElements(notes.getTotalElements())
+                                    .totalPages(notes.getTotalPages())
+                                    .pageNo(pageNo).pageSize(pageSize)
+                                    .isFirst(notes.isFirst())
+                                    .isLast(notes.isLast()).build();
+
+            return noteResponse;
         }
 }

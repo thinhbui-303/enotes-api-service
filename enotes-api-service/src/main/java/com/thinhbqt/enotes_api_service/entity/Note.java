@@ -4,6 +4,8 @@ package com.thinhbqt.enotes_api_service.entity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
@@ -36,4 +38,8 @@ public class Note extends BaseModel{
 
     @ManyToOne
     private FileDetails fileDetails;
+
+    private Boolean isDeleted;
+
+    private Date deletedOn;
 }

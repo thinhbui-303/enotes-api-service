@@ -69,6 +69,22 @@ public class NoteController {
         NoteResponse noteResponse = noteService.getAllNotePagination(1, pageNo, pageSize);
        return CommonUtil.createBuildResponse(noteResponse, HttpStatus.OK);
    }
-   
-    
+    @GetMapping("/deleteNote/{id}")
+    public ResponseEntity<?> softDeleteNote(@PathVariable Integer id) {
+        noteService.softDeleteNote(id);
+
+        return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Delete success!");
+    }
+    @GetMapping("/restoreNote/{id}")
+    public ResponseEntity<?> restoreNote(@PathVariable Integer id) {
+        noteService.restoreNote(id);
+
+        return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Restored success!");
+    }
+    @GetMapping("/recycleBin")
+   public ResponseEntity<?> getNoteFromRecycleBin(@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, 
+    @RequestParam(value = "pageSize", defaultValue = "10")Integer pageSize) {
+        NoteResponse noteResponse = noteService.getNoteFromBinPagination(1, pageNo, pageSize);
+       return CommonUtil.createBuildResponse(noteResponse, HttpStatus.OK);
+   }
 }
