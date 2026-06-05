@@ -27,13 +27,14 @@ public class CommonUtil {
         GenericResponse response = GenericResponse.builder()
         .responseStatus(status).status("failed")
         .data(data)
-        .build();
+        .build();   
         return response.create();
     }
     public static ResponseEntity<?> createErrorResponseMessage( String message, HttpStatus status){
         GenericResponse response = GenericResponse.builder()
         .responseStatus(status).status("failed")
         .message(message).build();
+
         return response.create();
     }
 

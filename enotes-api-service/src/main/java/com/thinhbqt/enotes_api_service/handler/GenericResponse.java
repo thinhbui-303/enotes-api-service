@@ -23,7 +23,7 @@ public class GenericResponse {
     private String status;
     private String message;
     private Object data;
-    public ResponseEntity<?> create(){
+    public ResponseEntity<?> create(){  
         Map<String , Object> map = new LinkedHashMap<>();
         map.put("status", status);
         map.put("message", message);

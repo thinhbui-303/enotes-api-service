@@ -67,7 +67,7 @@ public class NoteController {
    public ResponseEntity<?> getAllNotePagination(@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, 
     @RequestParam(value = "pageSize", defaultValue = "10")Integer pageSize) {
         NoteResponse noteResponse = noteService.getAllNotePagination(1, pageNo, pageSize);
-       return new ResponseEntity<>(noteResponse, HttpStatus.OK);
+       return CommonUtil.createBuildResponse(noteResponse, HttpStatus.OK);
    }
    
     

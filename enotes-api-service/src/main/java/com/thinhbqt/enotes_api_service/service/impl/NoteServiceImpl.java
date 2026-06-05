@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thinhbqt.enotes_api_service.dto.NoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto.CategoryDto;
+import com.thinhbqt.enotes_api_service.dto.NoteDto.FileDetailsDto;
 import com.thinhbqt.enotes_api_service.dto.NoteResponse;
 import com.thinhbqt.enotes_api_service.entity.FileDetails;
 import com.thinhbqt.enotes_api_service.entity.Note;
@@ -60,9 +61,15 @@ public class NoteServiceImpl implements NoteService{
         NoteDto noteDto = ob.readValue(notes, NoteDto.class);
 
         FileDetails fileDetails = saveFileDetails(file);
+
+        if(!ObjectUtils.isEmpty(noteDto.getId())){
+            updateNote(noteDto, file);
+        }
         checkExistCategory(noteDto.getCategoryDto());
 
         Note note = mapper.map(noteDto, Note.class);
+       
+        
 
         if(!ObjectUtils.isEmpty(fileDetails)){
             note.setFileDetails(fileDetails);
@@ -74,12 +81,19 @@ public class NoteServiceImpl implements NoteService{
         }
         Note saveNote =  noteRepository.save(note);
         if(!ObjectUtils.isEmpty(saveNote)){
-            
             return true;
         }
-        else return false;
+        return false;
 
     }
+    private void updateNote(NoteDto noteDto , MultipartFile file) {
+        Note check = noteRepository.findById(noteDto.getId())
+        .orElseThrow(() -> new ResourceNotFoundException("Id note not found!"));
+        if(ObjectUtils.isEmpty(file)){
+            noteDto.setFileDetailsDto(mapper.map(check.getFileDetails(), FileDetailsDto.class));
+        }
+    }
+
     private FileDetails saveFileDetails(MultipartFile file)throws Exception{
         if(!file.isEmpty()){
             FileDetails fileDtls = new FileDetails();
