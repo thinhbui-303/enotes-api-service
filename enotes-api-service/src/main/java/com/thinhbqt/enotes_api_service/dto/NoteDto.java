@@ -1,5 +1,6 @@
 package com.thinhbqt.enotes_api_service.dto;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class NoteDto {
 
     private Boolean isDeleted;
 
-    private Date deletedOn;
+    private LocalDateTime deletedOn;
     
     private FileDetailsDto fileDetailsDto;
     @Getter

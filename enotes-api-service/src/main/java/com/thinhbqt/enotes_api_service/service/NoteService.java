@@ -25,6 +25,6 @@ public interface NoteService {
 
     public NoteResponse getNoteFromBinPagination(Integer uid , Integer pageNo, Integer pageSize);
 
-
+    public void hardDeleteNote(Integer id);
 
 }

@@ -4,7 +4,8 @@ package com.thinhbqt.enotes_api_service.entity;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
-import java.util.Date;
+
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -41,5 +42,5 @@ public class Note extends BaseModel{
 
     private Boolean isDeleted;
 
-    private Date deletedOn;
+    private LocalDateTime deletedOn;
 }

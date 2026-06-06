@@ -1,5 +1,8 @@
 package com.thinhbqt.enotes_api_service.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +18,5 @@ public interface NoteRepository extends JpaRepository<Note, Integer>{
 
     Page<Note> findByCreatedByAndIsDeletedFalse(Integer uid, Pageable pageable);
 
+    List<Note> findByIsDeletedTrueAndDeletedOnBefore(LocalDateTime cutOffDay);
 }

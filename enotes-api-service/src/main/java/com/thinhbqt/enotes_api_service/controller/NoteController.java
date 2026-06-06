@@ -87,4 +87,10 @@ public class NoteController {
         NoteResponse noteResponse = noteService.getNoteFromBinPagination(1, pageNo, pageSize);
        return CommonUtil.createBuildResponse(noteResponse, HttpStatus.OK);
    }
+   @GetMapping("/deletePermanentNote/{id}")
+    public ResponseEntity<?> hardDeleteNote(@PathVariable Integer id) {
+        noteService.hardDeleteNote(id);
+
+        return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Delete permanent success!");
+    }
 }
