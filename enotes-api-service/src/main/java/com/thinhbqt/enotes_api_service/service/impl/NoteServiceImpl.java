@@ -237,5 +237,17 @@ public class NoteServiceImpl implements NoteService {
         return favoriteNoteRepository.findByUid(uid)
         .stream().map(favNote -> mapper.map(favNote, FavoriteNoteDto.class)).toList();
     }
+    @Override
+    public Boolean copyNote(Integer id){
+        Note note = noteRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("id not found!"));
+        Note copNote = Note.builder().title(note.getTitle()).category(note.getCategory())
+                        .description(note.getDescription()).isDeleted(false).fileDetails(null).build();
+        Note saveCopyNote =  noteRepository.save(copNote);
+        if(ObjectUtils.isEmpty(saveCopyNote )){
+            return false;
+        }
+        return true;
+    }
 
 }

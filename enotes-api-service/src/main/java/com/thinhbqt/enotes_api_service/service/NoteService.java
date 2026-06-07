@@ -34,4 +34,6 @@ public interface NoteService {
     public void deleteFavoriteNote(Integer favoriteNoteId);
 
     public List<FavoriteNoteDto> getFavoriteNote(Integer uid);
+    
+    public Boolean copyNote(Integer id);
 }
