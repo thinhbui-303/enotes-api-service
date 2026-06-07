@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.thinhbqt.enotes_api_service.dto.FavoriteNoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteResponse;
+import com.thinhbqt.enotes_api_service.entity.FavoriteNote;
 import com.thinhbqt.enotes_api_service.entity.FileDetails;
 
 public interface NoteService {
@@ -27,4 +29,9 @@ public interface NoteService {
 
     public void hardDeleteNote(Integer id);
 
+    public void saveFavoriteNote(Integer noteId);
+
+    public void deleteFavoriteNote(Integer favoriteNoteId);
+
+    public List<FavoriteNoteDto> getFavoriteNote(Integer uid);
 }

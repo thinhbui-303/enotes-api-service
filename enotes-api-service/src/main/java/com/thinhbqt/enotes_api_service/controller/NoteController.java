@@ -3,6 +3,7 @@ package com.thinhbqt.enotes_api_service.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.thinhbqt.enotes_api_service.dto.FavoriteNoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteResponse;
 import com.thinhbqt.enotes_api_service.entity.FileDetails;
@@ -17,9 +18,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -87,10 +90,30 @@ public class NoteController {
         NoteResponse noteResponse = noteService.getNoteFromBinPagination(1, pageNo, pageSize);
        return CommonUtil.createBuildResponse(noteResponse, HttpStatus.OK);
    }
-   @GetMapping("/deletePermanentNote/{id}")
+   @DeleteMapping("/deletePermanentNote/{id}")
     public ResponseEntity<?> hardDeleteNote(@PathVariable Integer id) {
         noteService.hardDeleteNote(id);
 
         return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Delete permanent success!");
+    }
+     @GetMapping("/saveFavoriteNote/{id}")
+    public ResponseEntity<?> saveFavoriteNote(@PathVariable Integer noteId) {
+        noteService.saveFavoriteNote(noteId);
+
+        return CommonUtil.createBuildResponseMessage(HttpStatus.CREATED, "save fav note success!");
+    }
+    @DeleteMapping("/deleteFavoriteNote/{id}")
+    public ResponseEntity<?> deleteFavoriteNote(@PathVariable Integer favNoteId) {
+        noteService.deleteFavoriteNote(favNoteId);
+
+        return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Delete faveNote success!");
+    }
+    @GetMapping("/getFavoriteNote")
+    public ResponseEntity<?> getFavoriteNote(@RequestParam Integer uid) {
+        List<FavoriteNoteDto> favoriteNoteDtos =  noteService.getFavoriteNote(1);
+        if(ObjectUtils.isEmpty(favoriteNoteDtos)){
+            return ResponseEntity.noContent().build();
+        }
+        return CommonUtil.createBuildResponse(favoriteNoteDtos, HttpStatus.OK);
     }
 }

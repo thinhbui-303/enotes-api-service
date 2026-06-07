@@ -23,14 +23,17 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thinhbqt.enotes_api_service.dto.FavoriteNoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto.FileDetailsDto;
 import com.thinhbqt.enotes_api_service.dto.NoteResponse;
+import com.thinhbqt.enotes_api_service.entity.FavoriteNote;
 import com.thinhbqt.enotes_api_service.entity.FileDetails;
 import com.thinhbqt.enotes_api_service.entity.Note;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.repository.CategoryRepository;
+import com.thinhbqt.enotes_api_service.repository.FavoriteNoteRepository;
 import com.thinhbqt.enotes_api_service.repository.FileDetailsRepository;
 import com.thinhbqt.enotes_api_service.repository.NoteRepository;
 import com.thinhbqt.enotes_api_service.service.NoteService;
@@ -45,6 +48,9 @@ public class NoteServiceImpl implements NoteService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Autowired
+    private FavoriteNoteRepository favoriteNoteRepository;
 
     @Autowired
     private FileDetailsRepository fileDetailsRepository;
@@ -214,4 +220,22 @@ public class NoteServiceImpl implements NoteService {
         noteRepository.delete(note);
         noteRepository.save(note);
     }
+    @Override
+    public void saveFavoriteNote(Integer noteId){
+       Note note =  noteRepository.findById(noteId).orElseThrow(() -> new ResourceNotFoundException("not found note id!"));
+        FavoriteNote favoriteNote = FavoriteNote.builder().userId(2).note(note).build();
+        favoriteNoteRepository.save(favoriteNote);
+    }
+    @Override
+    public void deleteFavoriteNote(Integer favoriteNoteId){
+        FavoriteNote favoriteNote = favoriteNoteRepository.findById(favoriteNoteId)
+        .orElseThrow(() -> new ResourceNotFoundException("id not found!"));
+        favoriteNoteRepository.delete(favoriteNote);
+    }
+    @Override
+    public List<FavoriteNoteDto> getFavoriteNote(Integer uid){
+        return favoriteNoteRepository.findByUid(uid)
+        .stream().map(favNote -> mapper.map(favNote, FavoriteNoteDto.class)).toList();
+    }
+
 }
