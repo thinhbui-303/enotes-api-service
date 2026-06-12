@@ -14,7 +14,7 @@ import com.thinhbqt.enotes_api_service.repository.NoteRepository;
 public class NoteSchedular {
     
     @Autowired
-    NoteRepository noteRepository;
+    private NoteRepository noteRepository;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteNotesFromRecycleBin(){

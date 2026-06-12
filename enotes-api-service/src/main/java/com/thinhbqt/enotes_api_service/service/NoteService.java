@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.thinhbqt.enotes_api_service.dto.FavoriteNoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteDto;
 import com.thinhbqt.enotes_api_service.dto.NoteResponse;
-import com.thinhbqt.enotes_api_service.entity.FavoriteNote;
 import com.thinhbqt.enotes_api_service.entity.FileDetails;
 
 public interface NoteService {
