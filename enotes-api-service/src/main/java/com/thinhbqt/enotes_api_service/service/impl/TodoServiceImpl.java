@@ -12,6 +12,7 @@ import com.thinhbqt.enotes_api_service.entity.Todo;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.repository.TodoRepository;
 import com.thinhbqt.enotes_api_service.service.TodoService;
+import com.thinhbqt.enotes_api_service.util.Validation;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -22,11 +23,14 @@ public class TodoServiceImpl implements TodoService {
     @Autowired
     private ModelMapper mapper;
 
+    @Autowired
+    private Validation validation;
+
     @Override
     public Boolean saveTodo(TodoDto todoDto) {
-
+        validation.todoValidation(todoDto);
         Todo todo = mapper.map(todoDto, Todo.class);
-        todo.setStatus(todoDto.getStatus().getId());
+        todo.setStatusId(todoDto.getStatus().getId());
         Todo saveTodo = todoRepository.save(todo);
         if (ObjectUtils.isEmpty(saveTodo)) {
             return false;

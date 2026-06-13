@@ -234,7 +234,7 @@ public class NoteServiceImpl implements NoteService {
     }
     @Override
     public List<FavoriteNoteDto> getFavoriteNote(Integer uid){
-        return favoriteNoteRepository.findByUid(uid)
+        return favoriteNoteRepository.findByUserId(uid)
         .stream().map(favNote -> mapper.map(favNote, FavoriteNoteDto.class)).toList();
     }
     @Override
