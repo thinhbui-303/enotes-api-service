@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
+import com.thinhbqt.enotes_api_service.dto.TodoDto;
+import com.thinhbqt.enotes_api_service.dto.TodoDto.StatusDto;
+import com.thinhbqt.enotes_api_service.enums.TodoStatus;
+import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.exception.ValidationException;
 
 @Component
@@ -51,5 +55,17 @@ public class Validation{
 			throw new ValidationException(error);
 		}
 
+	}
+	public void todoValidation(TodoDto todoDto){
+		StatusDto reqStatus = todoDto.getStatus();
+		Boolean statusFound = false;
+		for (TodoStatus st : TodoStatus.values()) {
+			if (st.getId().equals(reqStatus.getId())) {
+				statusFound = true;
+			}
+		}
+		if (!statusFound) {
+			throw new ResourceNotFoundException("invalid status");
+		}
 	}
 }
