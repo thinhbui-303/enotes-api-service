@@ -25,7 +25,6 @@ public class FavoriteNote {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
     private Note note;
 
     private Integer userId;
