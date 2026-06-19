@@ -1,0 +1,35 @@
+package com.thinhbqt.enotes_api_service.controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.thinhbqt.enotes_api_service.dto.UserDto;
+import com.thinhbqt.enotes_api_service.service.UserService;
+import com.thinhbqt.enotes_api_service.util.CommonUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+@RestController
+@RequestMapping("/api/v1/auth")
+public class AuthController {
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/")
+    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto, HttpServletRequest request) {
+        String url  = CommonUtil.getSiteURL(request);
+        Boolean isRegistered = userService.registerUser(userDto, url);
+        if(isRegistered){
+            return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Register successful");
+        }
+        else{
+            return CommonUtil.createErrorResponseMessage( "Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+}
