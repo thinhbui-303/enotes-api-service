@@ -4,8 +4,11 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.security.auth.login.CredentialException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -72,5 +75,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleSuccessException(Exception e) {
         log.error("GlobalExceptionHandler::handleSuccessException ", e.getMessage());
         return CommonUtil.createErrorResponseMessage( e.getMessage(),HttpStatus.OK);
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<?> handleBadCredentialsException(Exception e) {
+        log.error("GlobalExceptionHandler::handleBadCredentialsException ", e.getMessage());
+        return CommonUtil.createErrorResponseMessage( e.getMessage(),HttpStatus.BAD_GATEWAY);
     }
 }

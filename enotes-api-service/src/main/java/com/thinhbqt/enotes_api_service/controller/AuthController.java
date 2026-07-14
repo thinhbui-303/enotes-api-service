@@ -4,11 +4,14 @@ package com.thinhbqt.enotes_api_service.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thinhbqt.enotes_api_service.dto.LoginRequest;
+import com.thinhbqt.enotes_api_service.dto.LoginResponse;
 import com.thinhbqt.enotes_api_service.dto.UserDto;
 import com.thinhbqt.enotes_api_service.service.UserService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
@@ -31,5 +34,13 @@ public class AuthController {
         else{
             return CommonUtil.createErrorResponseMessage( "Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse =  userService.login(loginRequest);
+        if(ObjectUtils.isEmpty(loginResponse)){
+            return CommonUtil.createErrorResponseMessage("Invalid credentials!", HttpStatus.BAD_GATEWAY );
+        }
+        return CommonUtil.createBuildResponse(loginResponse, HttpStatus.OK);
     }
 }
