@@ -1,9 +1,12 @@
 package com.thinhbqt.enotes_api_service.service.impl;
 
 import com.thinhbqt.enotes_api_service.entity.User;
+import com.thinhbqt.enotes_api_service.exception.JwtTokenExpiredException;
 import com.thinhbqt.enotes_api_service.service.JwtService;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -46,9 +49,21 @@ public class JwtServiceImpl implements JwtService {
     }
     
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().verifyWith(getDecryptKey()).build()
+        try {
+            return Jwts.parser().verifyWith(getDecryptKey()).build()
                 .parseSignedClaims(token)
                 .getPayload();
+        }
+        catch(ExpiredJwtException e){
+            throw new JwtTokenExpiredException("Token is Expired");
+        }
+        catch(JwtException e){
+            throw new JwtTokenExpiredException("Invalid Jwt token");
+        } 
+        catch (Exception e) {
+            throw e;
+        }
+        
     }
 
     @Override

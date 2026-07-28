@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save-category")
     public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto category) {
         Boolean isSaved = categoryService.saveCategory(category);
@@ -45,6 +47,7 @@ public class CategoryController {
             return CommonUtil.createErrorResponseMessage("failed to save category", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/categories")
     public ResponseEntity<?> getAllCategory() {
         List<CategoryDto> categories = categoryService.getAllCategory();
@@ -94,6 +97,7 @@ public class CategoryController {
             return CommonUtil.createBuildResponse(categoryDto, HttpStatus.OK);
         
     }
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Integer id) throws Exception{
         Boolean deletedCategory = categoryService.deleteById(id);

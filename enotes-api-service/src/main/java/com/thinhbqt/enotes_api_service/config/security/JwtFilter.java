@@ -2,7 +2,9 @@ package com.thinhbqt.enotes_api_service.config.security;
 
 import java.io.IOException;
 
+import org.apache.tomcat.util.http.parser.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +12,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thinhbqt.enotes_api_service.handler.GenericResponse;
 import com.thinhbqt.enotes_api_service.service.JwtService;
 
 import jakarta.servlet.FilterChain;
@@ -29,52 +33,50 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
-        String token = null;
-        String username = null;
+        try {
+            String authHeader = request.getHeader("Authorization");
+            String token = null;
+            String username = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7).trim();
-            username = jwtService.extractUsername(token);
-        }
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            if (jwtService.validateToken(token, userDetails)) {
-
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7).trim();
+                username = jwtService.extractUsername(token);
             }
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                if (jwtService.validateToken(token, userDetails)) {
+
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
+
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+        } catch (Exception e) {
+            generateResponseError(response, e);
         }
 
         filterChain.doFilter(request, response);
-        
-    }
-//     @Override
-// protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-//         throws ServletException, IOException {
-    
-//     // In ra URL mà Request này thực tế đang gọi vào hệ thống
-//     System.out.println("====== DEBUG REQUEST ======");
-//     System.out.println("URL thực tế đang chạy vào Java: " + request.getRequestURI());
-    
-//     // Ép in ra TẤT CẢ các Header mà Java nhận được từ Postman
-//     java.util.Enumeration<String> headerNames = request.getHeaderNames();
-//     while (headerNames.hasMoreElements()) {
-//         String headerName = headerNames.nextElement();
-//         System.out.println("Header: " + headerName + " = " + request.getHeader(headerName));
-//     }
-//     System.out.println("===========================");
 
-//     String authHeader = request.getHeader("Authorization");
-//     // ... các đoạn code xử lý Token phía dưới giữ nguyên ...
-//     filterChain.doFilter(request, response);
-// }
-    
+    }
+
+    private void generateResponseError(HttpServletResponse response, Exception e) throws IOException {
+        response.setContentType("application/json");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        Object error = GenericResponse.builder()
+                .status("failed")
+                .message(e.getMessage())
+                .responseStatus(HttpStatus.UNAUTHORIZED)
+                .build()
+                .create()
+                .getBody();
+        response.getWriter().write(new ObjectMapper().writeValueAsString(error));
+
+    }
+
 }
