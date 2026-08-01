@@ -136,4 +136,13 @@ public class NoteController {
         }
         return CommonUtil.createErrorResponseMessage("fail to copy!", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @GetMapping("/search")
+    public ResponseEntity<?> searchNote(
+            @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam(name = "key", defaultValue = "") String key) {
+
+        NoteResponse notesResponse = noteService.getNotesByUserSearch(pageNo, pageSize, key);
+        return new ResponseEntity<>(notesResponse, HttpStatus.OK);
+    }
 }

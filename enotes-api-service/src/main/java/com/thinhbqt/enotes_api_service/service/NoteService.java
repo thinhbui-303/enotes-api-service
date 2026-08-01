@@ -35,4 +35,6 @@ public interface NoteService {
     public List<FavoriteNoteDto> getFavoriteNote();
     
     public Boolean copyNote(Integer id);
+
+    public NoteResponse getNotesByUserSearch(Integer pageNo, Integer pageSize, String keyword);
 }
