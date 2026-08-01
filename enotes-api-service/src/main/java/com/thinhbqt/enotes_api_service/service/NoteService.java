@@ -18,13 +18,13 @@ public interface NoteService {
     
     public byte[] downloadFile(FileDetails fileDetails)throws Exception;
 
-    public NoteResponse getAllNotePagination(Integer uid , Integer pageNo, Integer pageSize);
+    public NoteResponse getAllNotePagination(Integer pageNo, Integer pageSize);
 
     public void softDeleteNote(Integer id);
 
     public void restoreNote(Integer id);
 
-    public NoteResponse getNoteFromBinPagination(Integer uid , Integer pageNo, Integer pageSize);
+    public NoteResponse getNoteFromBinPagination(Integer pageNo, Integer pageSize);
 
     public void hardDeleteNote(Integer id);
 
@@ -32,7 +32,7 @@ public interface NoteService {
 
     public void deleteFavoriteNote(Integer favoriteNoteId);
 
-    public List<FavoriteNoteDto> getFavoriteNote(Integer uid);
+    public List<FavoriteNoteDto> getFavoriteNote();
     
     public Boolean copyNote(Integer id);
 }

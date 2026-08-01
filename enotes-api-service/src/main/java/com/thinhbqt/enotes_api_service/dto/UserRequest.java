@@ -7,7 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class UserDto {
+public class UserRequest {
     private Integer id;
     private String firstName;
     private String lastName;

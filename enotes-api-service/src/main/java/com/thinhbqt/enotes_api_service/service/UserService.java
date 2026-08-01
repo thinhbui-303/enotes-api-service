@@ -1,11 +1,16 @@
 package com.thinhbqt.enotes_api_service.service;
 
-import com.thinhbqt.enotes_api_service.dto.LoginRequest;
-import com.thinhbqt.enotes_api_service.dto.LoginResponse;
-import com.thinhbqt.enotes_api_service.dto.UserDto;
+import com.thinhbqt.enotes_api_service.dto.PasswordChangeRequest;
+import com.thinhbqt.enotes_api_service.dto.PasswordResetRequest;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserService {
-    Boolean registerUser(UserDto userDto, String url);
+    public void changePassword(PasswordChangeRequest request);
+    
+    public void sendEmailPasswordReset(String email, HttpServletRequest request) throws Exception;
 
-    LoginResponse login(LoginRequest loginRequest);
+	public void verifyPasswordResetLink(Integer uid, String code) throws Exception;
+
+	public void resetPassword(PasswordResetRequest pswdResetRequest) throws Exception;
 }

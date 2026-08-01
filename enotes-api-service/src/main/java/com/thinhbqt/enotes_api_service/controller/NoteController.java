@@ -32,6 +32,7 @@ public class NoteController {
     @Autowired
     NoteService noteService;
 
+    @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/save-note")
     public ResponseEntity<?> saveNote(@RequestParam String notes, @RequestParam(defaultValue = "") MultipartFile file)
             throws Exception {
@@ -53,7 +54,7 @@ public class NoteController {
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/download/{id}")
     public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws Exception {
         FileDetails fileDetails = noteService.getFileDetails(id);
@@ -68,32 +69,32 @@ public class NoteController {
         return CommonUtil.createBuildResponse(data, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/NotesPagination")
-    public ResponseEntity<?> getAllNotePagination(@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+    @PreAuthorize("hasAnyRole('USER')")
+    @GetMapping("/user-notes")
+    public ResponseEntity<?> getAllNotePaginationByUser(@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
-        NoteResponse noteResponse = noteService.getAllNotePagination(1, pageNo, pageSize);
+        NoteResponse noteResponse = noteService.getAllNotePagination(pageNo, pageSize);
         return CommonUtil.createBuildResponse(noteResponse, HttpStatus.OK);
     }
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/deleteNote/{id}")
     public ResponseEntity<?> softDeleteNote(@PathVariable Integer id) {
         noteService.softDeleteNote(id);
 
         return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Delete success!");
     }
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/restoreNote/{id}")
     public ResponseEntity<?> restoreNote(@PathVariable Integer id) {
         noteService.restoreNote(id);
 
         return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Restored success!");
     }
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/recycleBin")
     public ResponseEntity<?> getNoteFromRecycleBin(@RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
             @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
-        NoteResponse noteResponse = noteService.getNoteFromBinPagination(1, pageNo, pageSize);
+        NoteResponse noteResponse = noteService.getNoteFromBinPagination(pageNo, pageSize);
         return CommonUtil.createBuildResponse(noteResponse, HttpStatus.OK);
     }
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -119,8 +120,8 @@ public class NoteController {
     }
 
     @GetMapping("/getFavoriteNote")
-    public ResponseEntity<?> getFavoriteNote(@RequestParam Integer uid) {
-        List<FavoriteNoteDto> favoriteNoteDtos = noteService.getFavoriteNote(1);
+    public ResponseEntity<?> getFavoriteNote() {
+        List<FavoriteNoteDto> favoriteNoteDtos = noteService.getFavoriteNote();
         if (ObjectUtils.isEmpty(favoriteNoteDtos)) {
             return ResponseEntity.noContent().build();
         }

@@ -40,7 +40,7 @@ public class TodoController {
         return CommonUtil.createBuildResponse(todoDto, HttpStatus.OK);
     }
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    @GetMapping("/getTodoByUser")
+    @GetMapping("/user-todo")
     public ResponseEntity<?> getTodoByUser() {
         List<TodoDto> todos= todoService.getTodoByUser();
         if(ObjectUtils.isEmpty(todos)){

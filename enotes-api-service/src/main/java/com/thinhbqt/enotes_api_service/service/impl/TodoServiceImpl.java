@@ -12,6 +12,7 @@ import com.thinhbqt.enotes_api_service.entity.Todo;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.repository.TodoRepository;
 import com.thinhbqt.enotes_api_service.service.TodoService;
+import com.thinhbqt.enotes_api_service.util.CommonUtil;
 import com.thinhbqt.enotes_api_service.util.Validation;
 
 @Service
@@ -46,7 +47,7 @@ public class TodoServiceImpl implements TodoService {
     }
     @Override
     public List<TodoDto> getTodoByUser(){
-        List<Todo> todos = todoRepository.findByCreatedBy(1);
+        List<Todo> todos = todoRepository.findByCreatedBy(CommonUtil.getLoggedInUser().getId());
         return todos.stream().map(todo -> mapper.map(todos, TodoDto.class)).toList();
     }
 

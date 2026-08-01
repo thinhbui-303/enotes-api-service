@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 import com.thinhbqt.enotes_api_service.dto.CategoryDto;
 import com.thinhbqt.enotes_api_service.dto.TodoDto;
 import com.thinhbqt.enotes_api_service.dto.TodoDto.StatusDto;
-import com.thinhbqt.enotes_api_service.dto.UserDto;
+import com.thinhbqt.enotes_api_service.dto.UserRequest;
 import com.thinhbqt.enotes_api_service.enums.TodoStatus;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.exception.ValidationException;
@@ -82,7 +82,7 @@ public class Validation{
 	}
 	
 
-    public void validateUser(UserDto userDto) {
+    public void validateUser(UserRequest userDto) {
         if (!StringUtils.hasText(userDto.getFirstName())) {
             throw new IllegalArgumentException("First name is invalid");
         }
@@ -110,7 +110,7 @@ public class Validation{
                 .collect(Collectors.toList());
 
         List<Integer> invalidIds = userDto.getRoles().stream()
-                .map(UserDto.RoleDto::getId)
+                .map(UserRequest.RoleDto::getId)
                 .filter(id -> !dbRoleIds.contains(id))
                 .collect(Collectors.toList());
 

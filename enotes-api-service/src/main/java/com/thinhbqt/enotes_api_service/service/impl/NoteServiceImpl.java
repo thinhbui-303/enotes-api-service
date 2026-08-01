@@ -37,6 +37,7 @@ import com.thinhbqt.enotes_api_service.repository.FavoriteNoteRepository;
 import com.thinhbqt.enotes_api_service.repository.FileDetailsRepository;
 import com.thinhbqt.enotes_api_service.repository.NoteRepository;
 import com.thinhbqt.enotes_api_service.service.NoteService;
+import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -167,10 +168,10 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteResponse getAllNotePagination(Integer uid, Integer pageNo, Integer pageSize) {
+    public NoteResponse getAllNotePagination(Integer pageNo, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        Page<Note> notes = noteRepository.findByCreatedByAndIsDeletedFalse(uid, pageable);
+        Page<Note> notes = noteRepository.findByCreatedByAndIsDeletedFalse(CommonUtil.getLoggedInUser().getId(), pageable);
 
         List<NoteDto> noteDtos = notes.get().map(note -> mapper.map(note, NoteDto.class)).toList();
         NoteResponse noteResponse = NoteResponse.builder().pageNo(pageNo).pageSize(pageSize)
@@ -197,10 +198,10 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public NoteResponse getNoteFromBinPagination(Integer uid, Integer pageNo, Integer pageSize) {
+    public NoteResponse getNoteFromBinPagination(Integer pageNo, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        Page<Note> notes = noteRepository.findByCreatedByAndIsDeletedTrue(uid, pageable);
+        Page<Note> notes = noteRepository.findByCreatedByAndIsDeletedTrue(CommonUtil.getLoggedInUser().getId(), pageable);
 
         List<NoteDto> noteDto = notes.get().map(note -> mapper.map(note, NoteDto.class)).toList();
 
@@ -223,7 +224,7 @@ public class NoteServiceImpl implements NoteService {
     @Override
     public void saveFavoriteNote(Integer noteId){
        Note note =  noteRepository.findById(noteId).orElseThrow(() -> new ResourceNotFoundException("not found note id!"));
-        FavoriteNote favoriteNote = FavoriteNote.builder().userId(2).note(note).build();
+        FavoriteNote favoriteNote = FavoriteNote.builder().userId(CommonUtil.getLoggedInUser().getId()).note(note).build();
         favoriteNoteRepository.save(favoriteNote);
     }
     @Override
@@ -233,8 +234,8 @@ public class NoteServiceImpl implements NoteService {
         favoriteNoteRepository.delete(favoriteNote);
     }
     @Override
-    public List<FavoriteNoteDto> getFavoriteNote(Integer uid){
-        return favoriteNoteRepository.findByUserId(uid)
+    public List<FavoriteNoteDto> getFavoriteNote(){
+        return favoriteNoteRepository.findByUserId(CommonUtil.getLoggedInUser().getId())
         .stream().map(favNote -> mapper.map(favNote, FavoriteNoteDto.class)).toList();
     }
     @Override

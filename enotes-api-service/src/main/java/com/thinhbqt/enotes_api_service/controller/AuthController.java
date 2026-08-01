@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.thinhbqt.enotes_api_service.dto.LoginRequest;
 import com.thinhbqt.enotes_api_service.dto.LoginResponse;
-import com.thinhbqt.enotes_api_service.dto.UserDto;
-import com.thinhbqt.enotes_api_service.service.UserService;
+import com.thinhbqt.enotes_api_service.dto.UserRequest;
+import com.thinhbqt.enotes_api_service.service.AuthService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,10 +22,10 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
     @Autowired
-    private UserService userService;
+    private AuthService userService;
 
     @PostMapping("/")
-    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto, HttpServletRequest request) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto, HttpServletRequest request) {
         String url  = CommonUtil.getSiteURL(request);
         Boolean isRegistered = userService.registerUser(userDto, url);
         if(isRegistered){

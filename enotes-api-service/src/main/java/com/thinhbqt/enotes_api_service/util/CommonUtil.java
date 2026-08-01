@@ -3,7 +3,10 @@ package com.thinhbqt.enotes_api_service.util;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.thinhbqt.enotes_api_service.config.security.CustomUserDetails;
+import com.thinhbqt.enotes_api_service.entity.User;
 import com.thinhbqt.enotes_api_service.handler.GenericResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -67,5 +70,12 @@ public class CommonUtil {
     public static String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         return siteURL.replace(request.getServletPath(), "");
+    }
+    public static User getLoggedInUser() {
+        CustomUserDetails logUser = (CustomUserDetails) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        return logUser.getUser();
     }
 }

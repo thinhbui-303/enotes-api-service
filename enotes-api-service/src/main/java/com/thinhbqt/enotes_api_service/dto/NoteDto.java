@@ -40,7 +40,7 @@ public class NoteDto {
     @NoArgsConstructor
     public static class CategoryDto {
         private Integer id;
-        private String name;
+        private String name;    
     }
     @Getter
     @Setter
