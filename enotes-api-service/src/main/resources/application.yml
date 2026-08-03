@@ -1,0 +1,35 @@
+spring:
+    application:
+        name: enotes-api-service
+    profiles:
+        active: dev
+        include: local
+---
+#dev config 
+spring:
+    config:
+        activate:
+            on-profile: dev
+    jpa:
+        hibernate:
+            ddl-auto: none
+    servlet:
+        multipart:
+            max-file-size: 100MB
+            max-request-size: 100MB
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        properties:
+            mail:
+                smtp:
+                    aut: true
+                    starttls: true
+
+
+file:
+    upload:
+        path: D:/Personal Project/Enotes-API-Service/notes/
+
+
+
