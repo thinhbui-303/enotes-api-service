@@ -19,7 +19,9 @@ import com.thinhbqt.enotes_api_service.service.UserService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -30,8 +32,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailService emailService;
+
     @Override
     public void changePassword(PasswordChangeRequest request) {
+        log.info("UserServiceImpl : Execution Start: changePassword method with email: {}", CommonUtil.getLoggedInUser().getEmail());
+
         User loggedInUser = CommonUtil.getLoggedInUser();
 
         boolean isMatched = passwordEncoder.matches(request.getOldPassword(), loggedInUser.getPassword());
@@ -42,10 +47,13 @@ public class UserServiceImpl implements UserService {
 
         loggedInUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(loggedInUser);
+        log.info("Execution end: changePassword method done ");
+
     }
 
     @Override
     public void sendEmailPasswordReset(String email, HttpServletRequest request) throws Exception {
+        log.info("UserServiceImpl : Execution Start: sendEmailPasswordReset method with email: {}", email);
         User user = userRepository.findByEmail(email);
         if (ObjectUtils.isEmpty(user)) {
             throw new ResourceNotFoundException("invalid Email");
@@ -58,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         String url = CommonUtil.getSiteURL(request);
         sendEmailRequest(updateUser, url);
-
+        log.info("Execution end: sendEmailPasswordReset method done ");
     }
 
     private void sendEmailRequest(User user, String url) throws Exception {
@@ -83,38 +91,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-	public void verifyPasswordResetLink(Integer uid, String code) throws Exception {
-		User user = userRepository.findById(uid).orElseThrow(()->new ResourceNotFoundException("invalid user"));
-		verifyPasswordResetToken(user.getStatus().getPasswordResetToken(),code);
-		
-	}
+    public void verifyPasswordResetLink(Integer uid, String code) throws Exception {
+        User user = userRepository.findById(uid).orElseThrow(() -> new ResourceNotFoundException("invalid user"));
+        verifyPasswordResetToken(user.getStatus().getPasswordResetToken(), code);
 
-	private void verifyPasswordResetToken(String existToken, String reqToken) {
-		
-		// request token not null
-		if(StringUtils.hasText(reqToken))
-		{
-			// password already reset
-			if(!StringUtils.hasText(existToken))
-			{
-				throw new IllegalArgumentException("Already Password reset");
-			}
-			// user req token changes
-			if(!existToken.equals(reqToken))
-			{
-				throw new IllegalArgumentException("invalid url");
-			}
-		}else {
-			throw new IllegalArgumentException("invalid token");
-		}
-	}
+    }
 
-	@Override
-	public void resetPassword(PasswordResetRequest pswdResetRequest) throws Exception {
-		User user = userRepository.findById(pswdResetRequest.getUid()).orElseThrow(()->new ResourceNotFoundException("invalid user"));
-		String encodePassword = passwordEncoder.encode(pswdResetRequest.getNewPassword());
-		user.setPassword(encodePassword);
-		user.getStatus().setPasswordResetToken(null);
-		userRepository.save(user);
-	}
+    private void verifyPasswordResetToken(String existToken, String reqToken) {
+
+        // request token not null
+        if (StringUtils.hasText(reqToken)) {
+            // password already reset
+            if (!StringUtils.hasText(existToken)) {
+                throw new IllegalArgumentException("Already Password reset");
+            }
+            // user req token changes
+            if (!existToken.equals(reqToken)) {
+                throw new IllegalArgumentException("invalid url");
+            }
+        } else {
+            throw new IllegalArgumentException("invalid token");
+        }
+    }
+
+    @Override
+    public void resetPassword(PasswordResetRequest pswdResetRequest) throws Exception {
+        log.info("UserServiceImpl : Execution Start: resetPassword method with user id: ", pswdResetRequest.getUid());
+        User user = userRepository.findById(pswdResetRequest.getUid())
+                .orElseThrow(() -> new ResourceNotFoundException("invalid user"));
+        String encodePassword = passwordEncoder.encode(pswdResetRequest.getNewPassword());
+        user.setPassword(encodePassword);
+        user.getStatus().setPasswordResetToken(null);
+        userRepository.save(user);
+        log.info("Execution end: resetPassword method done ");
+
+    }
 }

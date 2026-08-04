@@ -15,39 +15,49 @@ import com.thinhbqt.enotes_api_service.exception.ExistedDataException;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.repository.CategoryRepository;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
+import com.thinhbqt.enotes_api_service.util.CommonUtil;
 import com.thinhbqt.enotes_api_service.util.Validation;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CategoryServiceImpl implements CategoryService {
-    
+
     @Autowired
     private CategoryRepository categoryRepository;
-    
+
     @Autowired
     private ModelMapper mapper;
 
     @Autowired
     private Validation validation;
+
     @Override
     public Boolean saveCategory(CategoryDto categoryDto) {
+        log.info("CategoryServiceImpl: Execution Start: saveCategory method!");
+
         validation.categoryValidation(categoryDto);
 
         Category category = mapper.map(categoryDto, Category.class);
-        Boolean existedName = categoryRepository.existsByName(categoryDto.getName()); 
-        
-        if(existedName){
+        Boolean existedName = categoryRepository.existsByName(categoryDto.getName());
+
+        if (existedName) {
             throw new ExistedDataException("Category name has already existed");
         }
         if (ObjectUtils.isEmpty(category.getId())) {
 
             category.setIsDeleted(false);
-            // category.setCreatedOn(new Date());
-            // category.setCreatedBy(1);            
-        }
-        else{
+            log.info("Execution success: add new Category");
+
+        } else {
             updateCategory(category);
+            log.info("Execution success: update Category done");
         }
         categoryRepository.save(category);
+
+        log.info("Execution end: saveCategory method!");
+
         return true;
     }
 
@@ -58,46 +68,55 @@ public class CategoryServiceImpl implements CategoryService {
             cate.setIsDeleted(category.getIsDeleted());
             cate.setCreatedBy(category.getCreatedBy());
             cate.setCreatedOn(category.getCreatedOn());
-            // cate.setUpdatedBy(1);
-            // cate.setUpdatedOn(new Date());
+
         }
-        
+
     }
- 
+
     @Override
     public List<CategoryDto> getAllCategory() {
+        log.info("CategoryServiceImpl: Execution Start: getAllCategory method!");
         List<Category> categories = categoryRepository.findByIsDeletedFalse();
+        log.info("Execution End: getAllCategory method!");
         return categories.stream()
                 .map(cate -> mapper.map(cate, CategoryDto.class)).toList();
     }
 
     @Override
     public List<CategoryResponse> getAllIsActiveCategory() {
+        log.info("CategoryServiceImpl: Execution Start: getAllIsActiveCategory method!");
+
         List<Category> categories = categoryRepository.findByIsActiveTrueAndIsDeletedFalse();
+        log.info("Execution End: getAllIsActiveCategory method!");
         return categories.stream().map(cate -> mapper.map(cate, CategoryResponse.class)).toList();
     }
 
     @Override
-    public CategoryDto getById(Integer id){
+    public CategoryDto getById(Integer id) {
+        log.info("CategoryServiceImpl: Execution Start: getById method in category!");
+
         Category category = categoryRepository.findByIdAndIsDeletedFalse(id)
-        .orElseThrow( () -> new ResourceNotFoundException("Category not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         if (ObjectUtils.isEmpty(category)) {
             return null;
         } else {
+            log.info("Execution end: getById method in category!");
             return mapper.map(category, CategoryDto.class);
         }
     }
 
     @Override
     public Boolean deleteById(Integer id) {
+        log.info("CategoryServiceImpl: Execution Start: deleteById method in category!");
         Category category = categoryRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Category not found with id:"+ id));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id:" + id));
 
         if (ObjectUtils.isEmpty(category)) {
             return false;
         } else {
             category.setIsDeleted(true);
             categoryRepository.save(category);
+            log.info("Execution end: deleteById method in category!");
             return true;
         }
     }

@@ -26,6 +26,9 @@ import com.thinhbqt.enotes_api_service.service.JwtService;
 import com.thinhbqt.enotes_api_service.service.AuthService;
 import com.thinhbqt.enotes_api_service.util.Validation;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
     @Autowired
@@ -55,9 +58,10 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
 
     private JwtService jwtService;
+
     @Override
     public Boolean registerUser(UserRequest userDto, String url) {
-
+        log.info("AuthServiceImpl: Execution Start: RegisterUser method with email: {}", userDto.getEmail());
         userValidation.validateUser(userDto);
 
         User user = modelMapper.map(userDto, User.class);
@@ -70,8 +74,11 @@ public class AuthServiceImpl implements AuthService {
         User savedUser = userRepository.save(user);
         if (savedUser != null) {
             sendRegisterConfirmationEmail(savedUser, url);
+            log.info("Execution Success: registerUser method. Email sent to: {}", userDto.getEmail());
         }
+        log.info("Execution End: registerUser method!");
         return savedUser != null;
+
     }
 
     private void setRole(UserRequest userDto, User user) {
@@ -101,20 +108,22 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
+        log.info("AuthServiceImpl: Execution Start: login method with email: {}", loginRequest.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-            CustomUserDetails customUserDetails = (CustomUserDetails)authentication.getPrincipal();
-            User user = customUserDetails.getUser();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = customUserDetails.getUser();
 
-            UserRequest userDto = mapper.map(user, UserRequest.class);
+        UserRequest userDto = mapper.map(user, UserRequest.class);
 
-            String token = jwtService.generateToken(user);
-            LoginResponse loginResponse = LoginResponse.builder()
-            .user(userDto).token(token).build();
+        String token = jwtService.generateToken(user);
+        LoginResponse loginResponse = LoginResponse.builder()
+                .user(userDto).token(token).build();
+        log.info("Execution end: login method!");
 
-            return loginResponse;
-        
+        return loginResponse;
+
     }
 
 }

@@ -10,6 +10,9 @@ import com.thinhbqt.enotes_api_service.exception.SuccessException;
 import com.thinhbqt.enotes_api_service.repository.UserRepository;
 import com.thinhbqt.enotes_api_service.service.HomeService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class HomeServiceImpl implements HomeService {
     @Autowired
@@ -17,6 +20,8 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     public Boolean verifyAccount(Integer uid, String verificationCode) {
+        log.info("HomeServiceImpl: Execution Start: verifyAccount method! with id: ", uid);
+
         User user = userRepository.findById(uid).orElseThrow(() -> new ResourceNotFoundException("Id user not found"));
         AccountStatus status = user.getStatus();
 
@@ -25,11 +30,13 @@ public class HomeServiceImpl implements HomeService {
         }
         if (status.getVerificationCode().equals(verificationCode)) {
             status.setIsActive(true);
-            status.setVerificationCode(null); 
+            status.setVerificationCode(null);
             userRepository.save(user);
+            log.info("Execution success: verifyAccount done!");
             return true;
         }
-
+        log.info("Execution fail: verifyAccount fail!");
+        log.info("Execution end: verifyAccount method!");
         return false;
     }
 

@@ -15,6 +15,9 @@ import com.thinhbqt.enotes_api_service.service.TodoService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 import com.thinhbqt.enotes_api_service.util.Validation;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class TodoServiceImpl implements TodoService {
 
@@ -29,24 +32,33 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Boolean saveTodo(TodoDto todoDto) {
+        log.info("TodoServiceImpl: Execution start: saveTodo method!");
         validation.todoValidation(todoDto);
         Todo todo = mapper.map(todoDto, Todo.class);
         todo.setStatusId(todoDto.getStatus().getId());
         Todo saveTodo = todoRepository.save(todo);
         if (ObjectUtils.isEmpty(saveTodo)) {
+            log.info("Execution fail: save todo fail!");
             return false;
         }
+        log.info("Execution success: saveTodo method done!");
+
+        log.info("Execution end: saveTodo method!");
+
         return true;
     }
 
     @Override
     public TodoDto getTodoById(Integer id) {
         Todo todo = todoRepository.findById(id)
-        .orElseThrow(() -> new ResourceNotFoundException("Id not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Id not found!"));
         return mapper.map(todo, TodoDto.class);
     }
+
     @Override
-    public List<TodoDto> getTodoByUser(){
+    public List<TodoDto> getTodoByUser() {
+        log.info("TodoServiceImpl: Execution start: getTodoByUser method by!", CommonUtil.getLoggedInUser().getEmail());
+
         List<Todo> todos = todoRepository.findByCreatedBy(CommonUtil.getLoggedInUser().getId());
         return todos.stream().map(todo -> mapper.map(todos, TodoDto.class)).toList();
     }

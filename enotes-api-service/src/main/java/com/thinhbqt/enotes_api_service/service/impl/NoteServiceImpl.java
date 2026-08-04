@@ -40,6 +40,9 @@ import com.thinhbqt.enotes_api_service.repository.NoteRepository;
 import com.thinhbqt.enotes_api_service.service.NoteService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class NoteServiceImpl implements NoteService {
     @Autowired
@@ -67,7 +70,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Boolean saveNote(String notes, MultipartFile file) throws Exception {
-
+        log.info("NoteServiceImpl: Execution start: saveNote method by ", CommonUtil.getLoggedInUser().getEmail());
         ObjectMapper ob = new ObjectMapper();
         NoteDto noteDto = ob.readValue(notes, NoteDto.class);
 
@@ -77,7 +80,9 @@ public class NoteServiceImpl implements NoteService {
         FileDetails fileDetails = saveFileDetails(file);
 
         if (!ObjectUtils.isEmpty(noteDto.getId())) {
+
             updateNote(noteDto, file);
+            log.info("Execution success: update Note done!");
         }
         checkExistCategory(noteDto.getCategoryDto());
 
@@ -92,8 +97,10 @@ public class NoteServiceImpl implements NoteService {
         }
         Note saveNote = noteRepository.save(note);
         if (!ObjectUtils.isEmpty(saveNote)) {
+            log.info("Execution success: save Note done!");
             return true;
         }
+        log.info("Execution end: saveNote method!");
         return false;
 
     }
@@ -162,9 +169,11 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public byte[] downloadFile(FileDetails fileDetails) throws Exception {
+        log.info("NoteServiceImpl: Execution start: downloadFile method by ", CommonUtil.getLoggedInUser().getEmail());
         InputStream inputStream = new FileInputStream(fileDetails.getPath());
         byte[] data = StreamUtils.copyToByteArray(inputStream);
         inputStream.close();
+        log.info("Execution end: downloadFile method done! ");
         return data;
     }
 
@@ -220,9 +229,11 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public void hardDeleteNote(Integer id) {
+        log.info("NoteServiceImpl: Execution start: hardDeleteNote method by ", CommonUtil.getLoggedInUser().getEmail());
         Note note = noteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found id note!"));
         noteRepository.delete(note);
         noteRepository.save(note);
+        log.info("Execution end: hardDeleteNote method! ");
     }
 
     @Override
@@ -243,6 +254,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<FavoriteNoteDto> getFavoriteNote() {
+        log.info("NoteServiceImpl: Execution start: getFavoriteNote method by ", CommonUtil.getLoggedInUser().getEmail());
         return favoriteNoteRepository.findByUserId(CommonUtil.getLoggedInUser().getId())
                 .stream().map(favNote -> mapper.map(favNote, FavoriteNoteDto.class)).toList();
     }
@@ -262,18 +274,15 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NoteResponse getNotesByUserSearch(Integer pageNo, Integer pageSize, String keyword) {
-
+        log.info("NoteServiceImpl: Execution start: getNotesByUserSearch method ");
         // 1. Lấy thông tin User hiện tại từ Security Context
         User loggedInUser = CommonUtil.getLoggedInUser();
         Integer userId = loggedInUser.getId();
 
-        // 2. Khởi tạo đối tượng Pageable
         Pageable pageable = PageRequest.of(pageNo, pageSize);
 
-        // 3. Thực thi truy vấn trong Repository
         Page<Note> notes = noteRepository.searchNotes(keyword, userId, pageable);
 
-        // 4. Chuyển đổi danh sách Entity sang DTO
         List<NoteDto> notesDtoList = notes.getContent()
                 .stream()
                 .map(note -> mapper.map(note, NoteDto.class))
@@ -285,7 +294,7 @@ public class NoteServiceImpl implements NoteService {
                 .pageNo(pageNo).pageSize(pageSize)
                 .isFirst(notes.isFirst())
                 .isLast(notes.isLast()).build();
-
+        log.info("Execution end: getNotesByUserSearch method!");
         return noteResponse;
     }
 
