@@ -1,45 +1,43 @@
 package com.thinhbqt.enotes_api_service.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thinhbqt.enotes_api_service.dto.LoginRequest;
 import com.thinhbqt.enotes_api_service.dto.LoginResponse;
 import com.thinhbqt.enotes_api_service.dto.UserRequest;
+import com.thinhbqt.enotes_api_service.endpoint.AuthEndpoint;
 import com.thinhbqt.enotes_api_service.service.AuthService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-@RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthController implements AuthEndpoint {
     @Autowired
     private AuthService userService;
 
-    @PostMapping("/")
-    public ResponseEntity<?> registerUser(@RequestBody UserRequest userDto, HttpServletRequest request) {
-        String url  = CommonUtil.getSiteURL(request);
+    @Override
+    public ResponseEntity<?> registerUser(UserRequest userDto, HttpServletRequest request) {
+        String url = CommonUtil.getSiteURL(request);
         Boolean isRegistered = userService.registerUser(userDto, url);
-        if(isRegistered){
+        if (isRegistered) {
             return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Register successful");
-        }
-        else{
-            return CommonUtil.createErrorResponseMessage( "Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return CommonUtil.createErrorResponseMessage("Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse =  userService.login(loginRequest);
-        if(ObjectUtils.isEmpty(loginResponse)){
-            return CommonUtil.createErrorResponseMessage("Invalid credentials!", HttpStatus.BAD_GATEWAY );
+
+    @Override
+    public ResponseEntity<?> login(LoginRequest loginRequest) {
+        LoginResponse loginResponse = userService.login(loginRequest);
+        if (ObjectUtils.isEmpty(loginResponse)) {
+            return CommonUtil.createErrorResponseMessage("Invalid credentials!", HttpStatus.BAD_GATEWAY);
         }
         return CommonUtil.createBuildResponse(loginResponse, HttpStatus.OK);
     }

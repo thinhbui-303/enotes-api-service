@@ -26,7 +26,13 @@ spring:
                     aut: true
                     starttls: true
 
-
+springdoc:
+    swagger-ui:
+        operationsSorter: method
+        tagsSorter: alpha
+        path: /enote-doc
+    api-docs:
+        path: /enote-api-doc 
 file:
     upload:
         path: D:/Personal Project/Enotes-API-Service/notes/
