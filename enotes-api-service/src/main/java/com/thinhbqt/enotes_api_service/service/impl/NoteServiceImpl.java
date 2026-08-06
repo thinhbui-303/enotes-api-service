@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -40,25 +39,22 @@ import com.thinhbqt.enotes_api_service.repository.NoteRepository;
 import com.thinhbqt.enotes_api_service.service.NoteService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService {
-    @Autowired
-    private NoteRepository noteRepository;
+    private final NoteRepository noteRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
-    @Autowired
-    private FavoriteNoteRepository favoriteNoteRepository;
+    private final FavoriteNoteRepository favoriteNoteRepository;
 
-    @Autowired
-    private FileDetailsRepository fileDetailsRepository;
+    private final FileDetailsRepository fileDetailsRepository;
 
     @Value("${file.upload.path}")
     private String uploadPath;

@@ -3,18 +3,19 @@ package com.thinhbqt.enotes_api_service.schedular;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.thinhbqt.enotes_api_service.entity.Note;
 import com.thinhbqt.enotes_api_service.repository.NoteRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
+@RequiredArgsConstructor
 public class NoteSchedular {
     
-    @Autowired
-    private NoteRepository noteRepository;
+    private final NoteRepository noteRepository;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteNotesFromRecycleBin(){

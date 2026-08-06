@@ -1,9 +1,7 @@
 package com.thinhbqt.enotes_api_service.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thinhbqt.enotes_api_service.dto.PasswordResetRequest;
@@ -13,15 +11,15 @@ import com.thinhbqt.enotes_api_service.service.UserService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 public class HomeController implements HomeEndpoint {
 
-    @Autowired
-    private HomeService homeService;
+    private final HomeService homeService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Override
     public ResponseEntity<?> verifyUserAccount(Integer uid,

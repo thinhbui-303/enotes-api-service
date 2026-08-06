@@ -2,7 +2,6 @@ package com.thinhbqt.enotes_api_service.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
@@ -13,10 +12,13 @@ import com.thinhbqt.enotes_api_service.endpoint.TodoEndpoint;
 import com.thinhbqt.enotes_api_service.service.TodoService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 public class TodoController implements TodoEndpoint {
-    @Autowired
-    TodoService todoService;
+
+    private final TodoService todoService;
 
     @Override
     public ResponseEntity<?> saveTodo(TodoDto todoDto) {

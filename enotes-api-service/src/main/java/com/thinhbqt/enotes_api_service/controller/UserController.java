@@ -1,10 +1,8 @@
 package com.thinhbqt.enotes_api_service.controller;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.thinhbqt.enotes_api_service.dto.PasswordChangeRequest;
@@ -14,13 +12,14 @@ import com.thinhbqt.enotes_api_service.entity.User;
 import com.thinhbqt.enotes_api_service.service.UserService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
-@RestController
-public class UserController implements UserEndpoint {
-    @Autowired
-    private ModelMapper mapper;
+import lombok.RequiredArgsConstructor;
 
-    @Autowired
-    private UserService userService;
+@RestController
+@RequiredArgsConstructor
+public class UserController implements UserEndpoint {
+    private final ModelMapper mapper;
+
+    private final UserService userService;
 
     @Override
     public ResponseEntity<?> getProfile() {

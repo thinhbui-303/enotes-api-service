@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.security.auth.login.CredentialException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.thinhbqt.enotes_api_service.handler.GenericResponse;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
 import lombok.extern.slf4j.Slf4j;

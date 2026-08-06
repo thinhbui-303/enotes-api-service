@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
@@ -21,14 +20,16 @@ import com.thinhbqt.enotes_api_service.exception.ValidationException;
 import com.thinhbqt.enotes_api_service.repository.RoleRepository;
 import com.thinhbqt.enotes_api_service.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Component
-public class Validation{
-	@Autowired
-    private RoleRepository roleRepository;
-	@Autowired	
-	private UserRepository userRepository;
-    
-    public void categoryValidation(CategoryDto categoryDto) {
+@RequiredArgsConstructor
+public class Validation {
+	private final RoleRepository roleRepository;
+
+	private final UserRepository userRepository;
+
+	public void categoryValidation(CategoryDto categoryDto) {
 
 		Map<String, Object> error = new LinkedHashMap<>();
 
@@ -68,7 +69,8 @@ public class Validation{
 		}
 
 	}
-	public void todoValidation(TodoDto todoDto){
+
+	public void todoValidation(TodoDto todoDto) {
 		StatusDto reqStatus = todoDto.getStatus();
 		Boolean statusFound = false;
 		for (TodoStatus st : TodoStatus.values()) {
@@ -80,42 +82,41 @@ public class Validation{
 			throw new ResourceNotFoundException("invalid status");
 		}
 	}
-	
 
-    public void validateUser(UserRequest userDto) {
-        if (!StringUtils.hasText(userDto.getFirstName())) {
-            throw new IllegalArgumentException("First name is invalid");
-        }
-        if (!StringUtils.hasText(userDto.getLastName())) {
-            throw new IllegalArgumentException("Last name is invalid");
-        }
-        
-        if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
-            throw new IllegalArgumentException("Email is invalid");
-        }
-		else{
-			if(userRepository.existsByEmail(userDto.getEmail())){
+	public void validateUser(UserRequest userDto) {
+		if (!StringUtils.hasText(userDto.getFirstName())) {
+			throw new IllegalArgumentException("First name is invalid");
+		}
+		if (!StringUtils.hasText(userDto.getLastName())) {
+			throw new IllegalArgumentException("Last name is invalid");
+		}
+
+		if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
+			throw new IllegalArgumentException("Email is invalid");
+		} else {
+			if (userRepository.existsByEmail(userDto.getEmail())) {
 				throw new IllegalArgumentException("Email already exists");
 			}
 		}
-        if (!StringUtils.hasText(userDto.getMobileNumber()) || !userDto.getMobileNumber().matches(Constants.MOBILE_REGEX)) {
-            throw new IllegalArgumentException("Mobile number is invalid");
-        }
-        if (CollectionUtils.isEmpty(userDto.getRoles())) {
-            throw new IllegalArgumentException("Role is invalid");
-        }
+		if (!StringUtils.hasText(userDto.getMobileNumber())
+				|| !userDto.getMobileNumber().matches(Constants.MOBILE_REGEX)) {
+			throw new IllegalArgumentException("Mobile number is invalid");
+		}
+		if (CollectionUtils.isEmpty(userDto.getRoles())) {
+			throw new IllegalArgumentException("Role is invalid");
+		}
 
-        List<Integer> dbRoleIds = roleRepository.findAll().stream()
-                .map(role -> role.getId())
-                .collect(Collectors.toList());
+		List<Integer> dbRoleIds = roleRepository.findAll().stream()
+				.map(role -> role.getId())
+				.collect(Collectors.toList());
 
-        List<Integer> invalidIds = userDto.getRoles().stream()
-                .map(UserRequest.RoleDto::getId)
-                .filter(id -> !dbRoleIds.contains(id))
-                .collect(Collectors.toList());
+		List<Integer> invalidIds = userDto.getRoles().stream()
+				.map(UserRequest.RoleDto::getId)
+				.filter(id -> !dbRoleIds.contains(id))
+				.collect(Collectors.toList());
 
-        if (!invalidIds.isEmpty()) {
-            throw new IllegalArgumentException("Role invalid: " + invalidIds);
-        }
-    }
+		if (!invalidIds.isEmpty()) {
+			throw new IllegalArgumentException("Role invalid: " + invalidIds);
+		}
+	}
 }

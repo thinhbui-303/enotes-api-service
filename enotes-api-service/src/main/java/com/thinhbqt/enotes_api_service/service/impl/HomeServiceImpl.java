@@ -1,6 +1,5 @@
 package com.thinhbqt.enotes_api_service.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.thinhbqt.enotes_api_service.entity.AccountStatus;
@@ -10,13 +9,14 @@ import com.thinhbqt.enotes_api_service.exception.SuccessException;
 import com.thinhbqt.enotes_api_service.repository.UserRepository;
 import com.thinhbqt.enotes_api_service.service.HomeService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class HomeServiceImpl implements HomeService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Boolean verifyAccount(Integer uid, String verificationCode) {

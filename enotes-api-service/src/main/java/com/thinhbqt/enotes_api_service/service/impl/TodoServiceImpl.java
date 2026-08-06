@@ -3,7 +3,6 @@ package com.thinhbqt.enotes_api_service.service.impl;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -15,20 +14,19 @@ import com.thinhbqt.enotes_api_service.service.TodoService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 import com.thinhbqt.enotes_api_service.util.Validation;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TodoServiceImpl implements TodoService {
 
-    @Autowired
-    private TodoRepository todoRepository;
+    private final TodoRepository todoRepository;
 
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
-    @Autowired
-    private Validation validation;
+    private final Validation validation;
 
     @Override
     public Boolean saveTodo(TodoDto todoDto) {

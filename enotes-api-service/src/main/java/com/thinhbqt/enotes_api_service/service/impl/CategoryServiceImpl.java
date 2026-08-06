@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -15,23 +14,21 @@ import com.thinhbqt.enotes_api_service.exception.ExistedDataException;
 import com.thinhbqt.enotes_api_service.exception.ResourceNotFoundException;
 import com.thinhbqt.enotes_api_service.repository.CategoryRepository;
 import com.thinhbqt.enotes_api_service.service.CategoryService;
-import com.thinhbqt.enotes_api_service.util.CommonUtil;
 import com.thinhbqt.enotes_api_service.util.Validation;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private ModelMapper mapper;
+    private final ModelMapper mapper;
 
-    @Autowired
-    private Validation validation;
+    private final Validation validation;
 
     @Override
     public Boolean saveCategory(CategoryDto categoryDto) {

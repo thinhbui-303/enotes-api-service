@@ -11,21 +11,21 @@ import com.thinhbqt.enotes_api_service.entity.FileDetails;
 import com.thinhbqt.enotes_api_service.service.NoteService;
 import com.thinhbqt.enotes_api_service.util.CommonUtil;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
 @RestController
+@RequiredArgsConstructor
 public class NoteController implements NoteEndpoint {
-    @Autowired
-    NoteService noteService;
+    private final NoteService noteService;
 
     @Override
     public ResponseEntity<?> saveNote(String notes, MultipartFile file)
