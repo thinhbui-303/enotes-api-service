@@ -11,44 +11,53 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.thinhbqt.enotes_api_service.entity.User;
 
 public class CustomUserDetails implements UserDetails {
+
+    private static final long serialVersionUID = 1L;
     private User user;
-    public CustomUserDetails(User user){
+
+    public CustomUserDetails(User user) {
+        super();
         this.user = user;
     }
 
-    public User getUser(){
+    public User getUser() {
         return this.user;
     }
+
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities(){
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        });
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
         return authorities;
     }
+
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return user.getEmail();
     }
+
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return user.getPassword();
     }
+
     @Override
-    public boolean isEnabled(){
+    public boolean isEnabled() {
         return true;
     }
+
     @Override
-    public boolean isCredentialsNonExpired(){
+    public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
-    public boolean isAccountNonExpired(){
+    public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
-    public boolean isAccountNonLocked(){
+    public boolean isAccountNonLocked() {
         return true;
     }
 }

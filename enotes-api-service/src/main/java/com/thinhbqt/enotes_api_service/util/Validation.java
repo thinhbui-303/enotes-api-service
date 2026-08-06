@@ -72,7 +72,7 @@ public class Validation {
 
 	public void todoValidation(TodoDto todoDto) {
 		StatusDto reqStatus = todoDto.getStatus();
-		Boolean statusFound = false;
+		boolean statusFound = false;
 		for (TodoStatus st : TodoStatus.values()) {
 			if (st.getId().equals(reqStatus.getId())) {
 				statusFound = true;
