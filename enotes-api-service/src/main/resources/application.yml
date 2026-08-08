@@ -33,6 +33,15 @@ springdoc:
         path: /enote-doc
     api-docs:
         path: /enote-api-doc 
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+                exclude: beans,loggers 
+    endpoint:
+        shutdown:
+            enabled: true
 file:
     upload:
         path: D:/Personal Project/Enotes-API-Service/notes/

@@ -24,7 +24,7 @@ public class CategoryController implements CategoryEndpoint {
 
     @Override
     public ResponseEntity<?> saveCategory(CategoryDto category) {
-        Boolean isSaved = categoryService.saveCategory(category);
+        boolean isSaved = categoryService.saveCategory(category);
         if (isSaved) {
             return CommonUtil.createBuildResponseMessage(HttpStatus.CREATED, "success save");
         } else {
@@ -66,7 +66,7 @@ public class CategoryController implements CategoryEndpoint {
 
     @Override
     public ResponseEntity<?> deleteCategory(Integer id) throws Exception {
-        Boolean deletedCategory = categoryService.deleteById(id);
+        boolean deletedCategory = categoryService.deleteById(id);
         if (deletedCategory) {
             return CommonUtil.createBuildResponse(deletedCategory, HttpStatus.OK);
         } else {

@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(PasswordChangeRequest request) {
-        log.info("UserServiceImpl : Execution Start: changePassword method with email: {}", CommonUtil.getLoggedInUser().getEmail());
+        // log.info("UserServiceImpl : Execution Start: changePassword method with email: {}", CommonUtil.getLoggedInUser().getEmail());
 
         User loggedInUser = CommonUtil.getLoggedInUser();
 
@@ -45,13 +45,13 @@ public class UserServiceImpl implements UserService {
 
         loggedInUser.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(loggedInUser);
-        log.info("Execution end: changePassword method done ");
+        // log.info("Execution end: changePassword method done ");
 
     }
 
     @Override
     public void sendEmailPasswordReset(String email, HttpServletRequest request) throws Exception {
-        log.info("UserServiceImpl : Execution Start: sendEmailPasswordReset method with email: {}", email);
+        // log.info("UserServiceImpl : Execution Start: sendEmailPasswordReset method with email: {}", email);
         User user = userRepository.findByEmail(email);
         if (ObjectUtils.isEmpty(user)) {
             throw new ResourceNotFoundException("invalid Email");
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
         String url = CommonUtil.getSiteURL(request);
         sendEmailRequest(updateUser, url);
-        log.info("Execution end: sendEmailPasswordReset method done ");
+        // log.info("Execution end: sendEmailPasswordReset method done ");
     }
 
     private void sendEmailRequest(User user, String url) throws Exception {
@@ -114,14 +114,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void resetPassword(PasswordResetRequest pswdResetRequest) throws Exception {
-        log.info("UserServiceImpl : Execution Start: resetPassword method with user id: ", pswdResetRequest.getUid());
+        // log.info("UserServiceImpl : Execution Start: resetPassword method with user id: ", pswdResetRequest.getUid());
         User user = userRepository.findById(pswdResetRequest.getUid())
                 .orElseThrow(() -> new ResourceNotFoundException("invalid user"));
         String encodePassword = passwordEncoder.encode(pswdResetRequest.getNewPassword());
         user.setPassword(encodePassword);
         user.getStatus().setPasswordResetToken(null);
         userRepository.save(user);
-        log.info("Execution end: resetPassword method done ");
+        // log.info("Execution end: resetPassword method done ");
 
     }
 }

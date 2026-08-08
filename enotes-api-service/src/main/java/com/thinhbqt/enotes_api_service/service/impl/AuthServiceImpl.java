@@ -52,7 +52,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean registerUser(UserRequest userDto, String url) {
-        log.info("AuthServiceImpl: Execution Start: RegisterUser method with email: {}", userDto.getEmail());
         userValidation.validateUser(userDto);
 
         User user = modelMapper.map(userDto, User.class);
@@ -67,7 +66,6 @@ public class AuthServiceImpl implements AuthService {
             sendRegisterConfirmationEmail(savedUser, url);
             log.info("Execution Success: registerUser method. Email sent to: {}", userDto.getEmail());
         }
-        log.info("Execution End: registerUser method!");
         return savedUser != null;
 
     }
@@ -99,7 +97,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        log.info("AuthServiceImpl: Execution Start: login method with email: {}", loginRequest.getUsername());
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
@@ -111,7 +108,6 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(user);
         LoginResponse loginResponse = LoginResponse.builder()
                 .user(userDto).token(token).build();
-        log.info("Execution end: login method!");
 
         return loginResponse;
 

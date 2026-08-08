@@ -24,7 +24,7 @@ public class AuthController implements AuthEndpoint {
     @Override
     public ResponseEntity<?> registerUser(UserRequest userDto, HttpServletRequest request) {
         String url = CommonUtil.getSiteURL(request);
-        Boolean isRegistered = userService.registerUser(userDto, url);
+        boolean isRegistered = userService.registerUser(userDto, url);
         if (isRegistered) {
             return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Register successful");
         } else {

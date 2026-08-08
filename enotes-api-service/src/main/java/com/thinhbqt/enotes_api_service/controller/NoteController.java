@@ -30,7 +30,7 @@ public class NoteController implements NoteEndpoint {
     @Override
     public ResponseEntity<?> saveNote(String notes, MultipartFile file)
             throws Exception {
-        Boolean saved = noteService.saveNote(notes, file);
+        boolean saved = noteService.saveNote(notes, file);
         if (saved) {
             return CommonUtil.createBuildResponseMessage(HttpStatus.OK, "Save successful");
         } else {
@@ -121,7 +121,7 @@ public class NoteController implements NoteEndpoint {
 
     @Override
     public ResponseEntity<?> copyNote(Integer id) {
-        Boolean copied = noteService.copyNote(id);
+        boolean copied = noteService.copyNote(id);
         if (copied) {
             return CommonUtil.createBuildResponseMessage(HttpStatus.CREATED, "Copied");
         }

@@ -30,7 +30,7 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public Boolean saveTodo(TodoDto todoDto) {
-        log.info("TodoServiceImpl: Execution start: saveTodo method!");
+        // log.info("TodoServiceImpl: Execution start: saveTodo method!");
         validation.todoValidation(todoDto);
         Todo todo = mapper.map(todoDto, Todo.class);
         todo.setStatusId(todoDto.getStatus().getId());
@@ -41,7 +41,7 @@ public class TodoServiceImpl implements TodoService {
         }
         log.info("Execution success: saveTodo method done!");
 
-        log.info("Execution end: saveTodo method!");
+        // log.info("Execution end: saveTodo method!");
 
         return true;
     }

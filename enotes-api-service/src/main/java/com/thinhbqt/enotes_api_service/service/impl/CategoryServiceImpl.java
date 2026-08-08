@@ -32,7 +32,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Boolean saveCategory(CategoryDto categoryDto) {
-        log.info("CategoryServiceImpl: Execution Start: saveCategory method!");
 
         validation.categoryValidation(categoryDto);
 
@@ -53,7 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
         categoryRepository.save(category);
 
-        log.info("Execution end: saveCategory method!");
+        // log.info("Execution end: saveCategory method!");
 
         return true;
     }
@@ -72,39 +71,39 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAllCategory() {
-        log.info("CategoryServiceImpl: Execution Start: getAllCategory method!");
+        // log.info("CategoryServiceImpl: Execution Start: getAllCategory method!");
         List<Category> categories = categoryRepository.findByIsDeletedFalse();
-        log.info("Execution End: getAllCategory method!");
+        // log.info("Execution End: getAllCategory method!");
         return categories.stream()
                 .map(cate -> mapper.map(cate, CategoryDto.class)).toList();
     }
 
     @Override
     public List<CategoryResponse> getAllIsActiveCategory() {
-        log.info("CategoryServiceImpl: Execution Start: getAllIsActiveCategory method!");
+        // log.info("CategoryServiceImpl: Execution Start: getAllIsActiveCategory method!");
 
         List<Category> categories = categoryRepository.findByIsActiveTrueAndIsDeletedFalse();
-        log.info("Execution End: getAllIsActiveCategory method!");
+        // log.info("Execution End: getAllIsActiveCategory method!");
         return categories.stream().map(cate -> mapper.map(cate, CategoryResponse.class)).toList();
     }
 
     @Override
     public CategoryDto getById(Integer id) {
-        log.info("CategoryServiceImpl: Execution Start: getById method in category!");
+        // log.info("CategoryServiceImpl: Execution Start: getById method in category!");
 
         Category category = categoryRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
         if (ObjectUtils.isEmpty(category)) {
             return null;
         } else {
-            log.info("Execution end: getById method in category!");
+            // log.info("Execution end: getById method in category!");
             return mapper.map(category, CategoryDto.class);
         }
     }
 
     @Override
     public Boolean deleteById(Integer id) {
-        log.info("CategoryServiceImpl: Execution Start: deleteById method in category!");
+        // log.info("CategoryServiceImpl: Execution Start: deleteById method in category!");
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id:" + id));
 
@@ -113,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             category.setIsDeleted(true);
             categoryRepository.save(category);
-            log.info("Execution end: deleteById method in category!");
+            // log.info("Execution end: deleteById method in category!");
             return true;
         }
     }

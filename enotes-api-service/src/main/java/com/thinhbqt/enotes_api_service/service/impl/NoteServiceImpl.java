@@ -66,7 +66,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public Boolean saveNote(String notes, MultipartFile file) throws Exception {
-        log.info("NoteServiceImpl: Execution start: saveNote method by ", CommonUtil.getLoggedInUser().getEmail());
+        // log.info("NoteServiceImpl: Execution start: saveNote method by ", CommonUtil.getLoggedInUser().getEmail());
         ObjectMapper ob = new ObjectMapper();
         NoteDto noteDto = ob.readValue(notes, NoteDto.class);
 
@@ -96,7 +96,7 @@ public class NoteServiceImpl implements NoteService {
             log.info("Execution success: save Note done!");
             return true;
         }
-        log.info("Execution end: saveNote method!");
+        // log.info("Execution end: saveNote method!");
         return false;
 
     }
@@ -165,11 +165,11 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public byte[] downloadFile(FileDetails fileDetails) throws Exception {
-        log.info("NoteServiceImpl: Execution start: downloadFile method by ", CommonUtil.getLoggedInUser().getEmail());
+        // log.info("NoteServiceImpl: Execution start: downloadFile method by ", CommonUtil.getLoggedInUser().getEmail());
         InputStream inputStream = new FileInputStream(fileDetails.getPath());
         byte[] data = StreamUtils.copyToByteArray(inputStream);
         inputStream.close();
-        log.info("Execution end: downloadFile method done! ");
+        // log.info("Execution end: downloadFile method done! ");
         return data;
     }
 
@@ -250,7 +250,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<FavoriteNoteDto> getFavoriteNote() {
-        log.info("NoteServiceImpl: Execution start: getFavoriteNote method by ", CommonUtil.getLoggedInUser().getEmail());
+        // log.info("NoteServiceImpl: Execution start: getFavoriteNote method by ", CommonUtil.getLoggedInUser().getEmail());
         return favoriteNoteRepository.findByUserId(CommonUtil.getLoggedInUser().getId())
                 .stream().map(favNote -> mapper.map(favNote, FavoriteNoteDto.class)).toList();
     }
@@ -270,7 +270,7 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public NoteResponse getNotesByUserSearch(Integer pageNo, Integer pageSize, String keyword) {
-        log.info("NoteServiceImpl: Execution start: getNotesByUserSearch method ");
+        // log.info("NoteServiceImpl: Execution start: getNotesByUserSearch method ");
         // 1. Lấy thông tin User hiện tại từ Security Context
         User loggedInUser = CommonUtil.getLoggedInUser();
         Integer userId = loggedInUser.getId();
@@ -290,7 +290,7 @@ public class NoteServiceImpl implements NoteService {
                 .pageNo(pageNo).pageSize(pageSize)
                 .isFirst(notes.isFirst())
                 .isLast(notes.isLast()).build();
-        log.info("Execution end: getNotesByUserSearch method!");
+        // log.info("Execution end: getNotesByUserSearch method!");
         return noteResponse;
     }
 

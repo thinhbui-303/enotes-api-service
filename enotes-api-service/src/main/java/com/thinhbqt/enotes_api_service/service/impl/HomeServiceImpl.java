@@ -20,7 +20,7 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     public Boolean verifyAccount(Integer uid, String verificationCode) {
-        log.info("HomeServiceImpl: Execution Start: verifyAccount method! with id: ", uid);
+        // log.info("HomeServiceImpl: Execution Start: verifyAccount method! with id: ", uid);
 
         User user = userRepository.findById(uid).orElseThrow(() -> new ResourceNotFoundException("Id user not found"));
         AccountStatus status = user.getStatus();
@@ -36,7 +36,7 @@ public class HomeServiceImpl implements HomeService {
             return true;
         }
         log.info("Execution fail: verifyAccount fail!");
-        log.info("Execution end: verifyAccount method!");
+        // log.info("Execution end: verifyAccount method!");
         return false;
     }
 
