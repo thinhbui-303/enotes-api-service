@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -70,6 +73,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "allCategories")
     public List<CategoryDto> getAllCategory() {
         // log.info("CategoryServiceImpl: Execution Start: getAllCategory method!");
         List<Category> categories = categoryRepository.findByIsDeletedFalse();
@@ -79,8 +83,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "allActiveCategories")
     public List<CategoryResponse> getAllIsActiveCategory() {
-        // log.info("CategoryServiceImpl: Execution Start: getAllIsActiveCategory method!");
+        // log.info("CategoryServiceImpl: Execution Start: getAllIsActiveCategory
+        // method!");
 
         List<Category> categories = categoryRepository.findByIsActiveTrueAndIsDeletedFalse();
         // log.info("Execution End: getAllIsActiveCategory method!");
@@ -88,8 +94,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Cacheable(value = "categoryById", key = "#id")
     public CategoryDto getById(Integer id) {
-        // log.info("CategoryServiceImpl: Execution Start: getById method in category!");
+        // log.info("CategoryServiceImpl: Execution Start: getById method in
+        // category!");
 
         Category category = categoryRepository.findByIdAndIsDeletedFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
@@ -102,8 +110,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Caching(evict = {
+            @CacheEvict(value = "getCategoryById", key = "#id"),
+            @CacheEvict(value = { "allCategory", "activeCategory" }, allEntries = true) 
+    })
     public Boolean deleteById(Integer id) {
-        // log.info("CategoryServiceImpl: Execution Start: deleteById method in category!");
+        // log.info("CategoryServiceImpl: Execution Start: deleteById method in
+        // category!");
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id:" + id));
 
